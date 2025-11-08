@@ -1,5 +1,8 @@
-name = "ebonidatin"
-compatibility_date = "2025-11-07"
+name = "mglink"
+compatibility_date = "2024-03-01"
+pages_build_output_dir = ".vercel/output/static"
 
-# For Cloudflare Pages (Next.js output)
-pages_build_output_dir = ".next"
+[env.production]
+variables = {
+  NODE_VERSION = "18"
+}
