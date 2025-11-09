@@ -1,0 +1,13 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/hello",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/hello.js:onRequestGet"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
