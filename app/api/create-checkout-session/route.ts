@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server"
 
 export const dynamic = 'force-dynamic'
-import Stripe from "stripe"
+export const runtime = 'nodejs'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-10-29.clover",
-})
+let stripe: any = null
+
+try {
+  if (process.env.STRIPE_SECRET_KEY) {
+    const Stripe = require("stripe").default
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-10-29.clover",
+    })
+  }
+} catch (error) {
+  console.warn('Stripe initialization failed during build')
+}
 
 const priceIds: Record<string, string> = {
   advanced: "price_advanced_monthly",
@@ -14,6 +23,10 @@ const priceIds: Record<string, string> = {
 }
 
 export async function POST(request: Request) {
+  if (!stripe) {
+    return NextResponse.json({ url: null })
+  }
+
   try {
     const { planId, userId } = await request.json()
 
@@ -40,6 +53,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url })
   } catch (error) {
+    console.error("Stripe error:", error)
     return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 })
   }
 }
