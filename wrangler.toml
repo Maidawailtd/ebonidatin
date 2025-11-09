@@ -1,12 +1,6 @@
 name = "mglink"
 compatibility_date = "2024-03-01"
-pages_build_output_dir = ".vercel/output/static"
+pages_build_output_dir = ".next"
 
-# This is the correct way to define a table with variables.
 [env.production]
-variables = { NODE_VERSION = "18" }  # All on one line
-
-# Alternatively, for multiple variables, you can use this multi-line array format:
-[env.production.variables]
-NODE_VERSION = "18"
-# Add other variables here, e.g., ANOTHER_VAR = "value"
+variables = { NODE_VERSION = "18" }
