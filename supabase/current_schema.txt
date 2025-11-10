@@ -1,4 +1,4 @@
-                                                                     Table "core.profiles"
+Table "core.profiles"
          Column          |            Type             | Collation | Nullable |          Default          | Storage  | Compression | Stats target | Description 
 -------------------------+-----------------------------+-----------+----------+---------------------------+----------+-------------+--------------+-------------
  id                      | uuid                        |           | not null | gen_random_uuid()         | plain    |             |              | 
@@ -416,4 +416,3 @@ Policies:
 Publications:
     "supabase_realtime"
 Access method: heap
-

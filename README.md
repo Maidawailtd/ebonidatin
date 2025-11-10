@@ -27,20 +27,20 @@
 ### Installation
 
 1. Clone the repository:
-```bash
+\`\`\`bash
 git clone https://github.com/your-org/ebonidatin.git
 cd ebonidatin
-```
+\`\`\`
 
 2. Install dependencies:
-```bash
+\`\`\`bash
 pnpm install
-```
+\`\`\`
 
 3. Set up environment variables:
-```bash
+\`\`\`bash
 cp .env.example .env.local
-```
+\`\`\`
 
 Edit `.env.local` with your credentials:
 - Supabase credentials
@@ -49,49 +49,49 @@ Edit `.env.local` with your credentials:
 - Other API keys
 
 4. Run development server:
-```bash
+\`\`\`bash
 pnpm dev
-```
+\`\`\`
 
 Open [http://localhost:3000](http://localhost:3000) to view the app.
 
 ## 📦 Building
 
 Build for production:
-```bash
+\`\`\`bash
 pnpm build
-```
+\`\`\`
 
 Start production server:
-```bash
+\`\`\`bash
 pnpm start
-```
+\`\`\`
 
 ## 🧪 Testing
 
 Run type checking:
-```bash
+\`\`\`bash
 pnpm type-check
-```
+\`\`\`
 
 Run linting:
-```bash
+\`\`\`bash
 pnpm lint
-```
+\`\`\`
 
 ## 🚢 Deployment
 
 ### Vercel (Recommended)
 
 1. Install Vercel CLI:
-```bash
+\`\`\`bash
 npm i -g vercel
-```
+\`\`\`
 
 2. Deploy:
-```bash
+\`\`\`bash
 vercel --prod
-```
+\`\`\`
 
 ### Environment Variables
 
@@ -105,7 +105,7 @@ Required environment variables in Vercel:
 
 ## 📁 Project Structure
 
-```
+\`\`\`
 ebonidatin/
 ├── app/                    # Next.js 14 app directory
 │   ├── api/               # API routes
@@ -119,7 +119,7 @@ ebonidatin/
 ├── public/                # Static assets
 ├── styles/                # Global styles
 └── supabase/             # Database migrations
-```
+\`\`\`
 
 ## 🔐 Security Features
 
