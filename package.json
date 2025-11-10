@@ -1,17 +1,17 @@
 {
   "name": "your-app",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "build": "next build",
-    "cf-typegen": "npx @cloudflare/next-on-pages --experimental-minify",
     "dev": "next dev",
+    "build": "next build",
+    "postbuild": "npx @cloudflare/next-on-pages",
+    "start": "next start",
     "lint": "next lint",
-    "preview": "npx @cloudflare/next-on-pages --watch",
-    "start": "next start"
+    "preview": "npx @cloudflare/next-on-pages --watch"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "latest",
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@hookform/resolvers": "5.2.2",
     "@marsidev/react-turnstile": "latest",
     "@radix-ui/react-accordion": "latest",
@@ -67,6 +67,8 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "latest",
+    "@cloudflare/workers-types": "^4.20240725.0",
     "@playwright/test": "1.56.1",
     "@tailwindcss/postcss": "4.1.17",
     "@types/node": "^22",
@@ -76,6 +78,6 @@
     "tailwindcss": "4.1.17",
     "tw-animate-css": "1.4.0",
     "typescript": "^5",
-    "wrangler": "4.46.0"
+    "wrangler": "latest"
   }
 }
