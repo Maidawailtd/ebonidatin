@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const command = new PutObjectCommand({
       Bucket: "mglink",
       Key: filename,
-      Body: Buffer.from(await file.arrayBuffer()),
+      Body: new Uint8Array(await file.arrayBuffer()),
       ContentType: file.type,
     });
     

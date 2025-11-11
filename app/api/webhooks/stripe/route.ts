@@ -1,3 +1,4 @@
+export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from "next/server"
 import Stripe from "stripe"
 
@@ -37,5 +38,3 @@ export async function POST(req: NextRequest) {
     )
   }
 }
-
-export const runtime = "edge"
