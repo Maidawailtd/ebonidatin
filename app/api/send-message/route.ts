@@ -1,16 +1,31 @@
+
 import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = 'force-dynamic'
-import { createClient } from "@/lib/supabase/server"
+
+// TODO: Replace with actual Cloudflare authentication and D1 data insertion
+async function sendMessage(senderId: string, receiverId: string, message: string) {
+  // This is a placeholder. In a real scenario, you would insert the message into your D1 database.
+  const newMessage = {
+    id: "message-123",
+    sender_id: senderId,
+    receiver_id: receiverId,
+    message,
+    created_at: new Date().toISOString(),
+  };
+  return newMessage;
+}
+
+async function getCurrentUserId() {
+  // This is a placeholder. In a real scenario, you would get the user ID from your authentication system.
+  return "user-123";
+}
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
+    const senderId = await getCurrentUserId();
 
-    if (!user) {
+    if (!senderId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -20,21 +35,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    const { data, error } = await supabase
-      .from("chat_messages")
-      .insert({
-        sender_id: user.id,
-        receiver_id,
-        message,
-      })
-      .select()
-      .single()
+    const newMessage = await sendMessage(senderId, receiver_id, message);
 
-    if (error) {
-      return NextResponse.json({ error: "Failed to send message" }, { status: 500 })
-    }
-
-    return NextResponse.json({ success: true, message: data })
+    return NextResponse.json({ success: true, message: newMessage })
   } catch (error) {
     return NextResponse.json({ error: "Failed to send message" }, { status: 500 })
   }

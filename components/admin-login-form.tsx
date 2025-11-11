@@ -1,80 +1,66 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { createClient } from "@/lib/supabase/client";
-import { Loader2 } from "lucide-react";
-import { OTPVerificationForm } from "./otp-verification-form";
+import type React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2 } from 'lucide-react';
+import { OTPVerificationForm } from './otp-verification-form';
+
+// TODO: Replace with your actual authentication and admin verification logic
+async function signIn(email, password) {
+  // This is a placeholder. In a real scenario, you would call your auth provider.
+  if (email === 'admin@ebonidating.com' && password === 'password') {
+    return { success: true }; // Simulate successful authentication
+  }
+  return { success: false, error: 'Invalid credentials' };
+}
+
+async function isAdmin() {
+  // This is a placeholder. In a real scenario, you would check the user's roles or permissions.
+  return true; // Simulate that the user is an admin
+}
 
 export function AdminLoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [otpRequired, setOtpRequired] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError('');
     setLoading(true);
 
     try {
-      const supabase = createClient();
+      const { success, error } = await signIn(email, password);
 
-      const { error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (authError) {
-        if (authError.message.includes("Email not confirmed")) {
-          setOtpRequired(true);
-          return;
-        }
-        throw authError;
+      if (!success) {
+        throw new Error(error);
       }
 
-      // If password is correct, but OTP is needed for 2FA
-      // This part depends on your Supabase setup (e.g., hooks or custom logic)
-      // For this example, we'll assume successful password sign-in means we can check admin access
       await checkAdminAndRedirect();
 
     } catch (err: any) {
-      setError(err.message || "Failed to sign in");
+      setError(err.message || 'Failed to sign in');
     } finally {
       setLoading(false);
     }
   };
 
   const checkAdminAndRedirect = async () => {
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const userIsAdmin = await isAdmin();
 
-    if (!user) {
-      setError("Not authenticated. Please log in again.");
-      setOtpRequired(false);
-      return;
-    }
-
-    const { data: adminUser, error: adminError } = await supabase
-      .from("admin_users")
-      .select("*")
-      .eq("user_id", user.id)
-      .single();
-
-    if (adminError || !adminUser) {
-      await supabase.auth.signOut();
-      setError("You do not have admin access.");
-      setOtpRequired(false);
+    if (!userIsAdmin) {
+      setError('You do not have admin access.');
     } else {
-      router.push("/admin");
+      router.push('/admin');
       router.refresh();
     }
   }
@@ -90,19 +76,19 @@ export function AdminLoginForm() {
         <CardDescription>Enter your admin credentials to continue</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className='space-y-4'>
           {error && (
-            <Alert variant="destructive">
+            <Alert variant='destructive'>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='email'>Email</Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="admin@ebonidating.com"
+              id='email'
+              type='email'
+              placeholder='admin@ebonidating.com'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -110,11 +96,11 @@ export function AdminLoginForm() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+          <div className='space-y-2'>
+            <Label htmlFor='password'>Password</Label>
             <Input
-              id="password"
-              type="password"
+              id='password'
+              type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -122,14 +108,14 @@ export function AdminLoginForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type='submit' className='w-full' disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                 Signing in...
               </>
             ) : (
-              "Sign In"
+              'Sign In'
             )}
           </Button>
         </form>

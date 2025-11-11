@@ -1,16 +1,29 @@
-import { createClient } from '@/lib/supabase/server';
+
 import { notFound } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
+// TODO: Replace with actual Cloudflare D1 data fetching
+async function getProfile(id: string) {
+  // This is a placeholder. In a real scenario, you would fetch the profile from your D1 database.
+  const sampleProfile = {
+    id: 'user-123',
+    display_name: 'John Doe',
+    full_name: 'John Doe',
+    bio: 'This is a sample bio.',
+    followers_count: 100,
+    following_count: 50,
+  };
+
+  if (id !== 'user-123') {
+    return null;
+  }
+
+  return sampleProfile;
+}
+
 export default async function ProfilePage({ params }: { params: { id: string } }) {
-  const supabase = createClient();
-  
-  const { data: profile } = await supabase
-    .from('core.profiles')
-    .select('*')
-    .eq('id', params.id)
-    .single();
+  const profile = await getProfile(params.id);
 
   if (!profile) {
     notFound();

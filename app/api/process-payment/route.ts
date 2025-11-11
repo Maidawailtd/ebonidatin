@@ -1,7 +1,14 @@
+
 import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = 'force-dynamic'
-import { createClient } from "@/lib/supabase/server"
+
+// TODO: Replace with actual Cloudflare D1 logic for updating subscriptions
+async function updateUserSubscription(userId: string, plan: string) {
+  // This is a placeholder. In a real scenario, you would update the user's subscription in your D1 database.
+  console.log(`Updating subscription for user ${userId} to plan ${plan}`);
+  return { success: true };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,20 +26,11 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    const supabase = await createClient()
-    const subscriptionExpiresAt = new Date()
-    subscriptionExpiresAt.setMonth(subscriptionExpiresAt.getMonth() + 1)
+    const result = await updateUserSubscription(userId, plan);
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        subscription_tier: plan,
-        subscription_expires_at: subscriptionExpiresAt.toISOString(),
-        gallery_access: true,
-      })
-      .eq("id", userId)
-
-    if (error) throw error
+    if (!result.success) {
+      throw new Error("Failed to update subscription");
+    }
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret })
   } catch (error: any) {

@@ -1,16 +1,17 @@
-import { createClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
+// TODO: Replace with actual Cloudflare D1 data fetching
+async function getChannels() {
+  // This is a placeholder. In a real scenario, you would fetch data from your D1 database.
+  return [
+    { id: 1, name: 'General', description: 'General chat channel', subscribers_count: 100, owner_id: { username: 'admin' } },
+    { id: 2, name: 'Introductions', description: 'Introduce yourself to the community', subscribers_count: 50, owner_id: { username: 'admin' } },
+  ];
+}
+
 export default async function ChannelsPage() {
-  const supabase = createClient();
-  
-  const { data: channels } = await supabase
-    .from('social.channels')
-    .select('*, profiles:owner_id(*)')
-    .eq('is_public', true)
-    .order('subscribers_count', { ascending: false })
-    .limit(20);
+  const channels = await getChannels();
 
   return (
     <div className="min-h-screen bg-gray-50">

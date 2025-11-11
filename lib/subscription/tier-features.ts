@@ -80,7 +80,7 @@ export const TIER_FEATURES: Record<SubscriptionTier, TierFeatures> = {
       passport: true,
       profileBoost: true,
       verifiedBadge: true,
-      portfolioShowcase: false,
+      portfolioShowcase: true,
       bookingSystem: false,
       modelVerification: false,
       premiumContent: true,

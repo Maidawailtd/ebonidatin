@@ -1,18 +1,26 @@
 
 import { type NextRequest, NextResponse } from "next/server";
 import { uploadFile } from "@/lib/cloudflare/r2";
-import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
+// TODO: Replace with actual Cloudflare authentication and D1 data insertion
+async function createPost(post: any) {
+  // This is a placeholder. In a real scenario, you would insert the post data into your D1 database.
+  console.log("Creating post:", post);
+  return { id: "post-123", ...post };
+}
+
+async function getCurrentUserId() {
+  // This is a placeholder. In a real scenario, you would get the user ID from your authentication system.
+  return "user-123";
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const userId = await getCurrentUserId();
 
-    if (!user) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -25,7 +33,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No video file provided" }, { status: 400 });
     }
 
-    const filename = `videos/${user.id}/${Date.now()}-${file.name}`;
+    const filename = `videos/${userId}/${Date.now()}-${file.name}`;
 
     const fileBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(fileBuffer);
@@ -34,20 +42,12 @@ export async function POST(request: NextRequest) {
 
     const publicUrl = `https://ebonidating.com/${filename}`;
 
-    const { data: post, error } = await supabase
-      .from("posts")
-      .insert({
-        user_id: user.id,
-        title,
-        description,
-        video_url: publicUrl,
-      })
-      .select()
-      .single();
-
-    if (error) {
-      return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
-    }
+    const post = await createPost({
+      user_id: userId,
+      title,
+      description,
+      video_url: publicUrl,
+    });
 
     return NextResponse.json({ success: true, post });
   } catch (error) {

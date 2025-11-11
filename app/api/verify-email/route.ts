@@ -1,7 +1,17 @@
-import { createClient } from "@/lib/supabase/server"
+
+import { type NextRequest, NextResponse } from "next/server"
 
 export const dynamic = 'force-dynamic'
-import { type NextRequest, NextResponse } from "next/server"
+
+// TODO: Replace with actual Cloudflare D1 logic for email verification
+async function verifyEmailToken(token: string) {
+  // This is a placeholder. In a real scenario, you would validate the token against your D1 database.
+  if (token === 'valid-token') {
+    return { success: true };
+  } else {
+    return { success: false, error: 'Invalid or expired token' };
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,36 +21,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Token required" }, { status: 400 })
     }
 
-    const supabase = await createClient()
+    const result = await verifyEmailToken(token);
 
-    // Find verification record
-    const { data: verification, error: verifyError } = await supabase
-      .from("email_verifications")
-      .select("*")
-      .eq("token", token)
-      .single()
-
-    if (verifyError || !verification) {
-      return NextResponse.json({ error: "Invalid or expired token" }, { status: 400 })
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
-
-    if (new Date(verification.expires_at) < new Date()) {
-      return NextResponse.json({ error: "Token expired" }, { status: 400 })
-    }
-
-    // Update user email verification
-    const { error: updateError } = await supabase
-      .from("profiles")
-      .update({ email_verified: true })
-      .eq("id", verification.user_id)
-
-    if (updateError) throw updateError
-
-    // Mark verification as verified
-    await supabase
-      .from("email_verifications")
-      .update({ verified_at: new Date().toISOString() })
-      .eq("id", verification.id)
 
     return NextResponse.json({ success: true, message: "Email verified successfully" })
   } catch (error) {
