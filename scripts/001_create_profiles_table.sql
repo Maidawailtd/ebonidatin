@@ -1,23 +1,33 @@
--- Create profiles table
-CREATE TABLE IF NOT EXISTS profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT UNIQUE NOT NULL,
-  full_name TEXT,
-  phone TEXT,
-  country TEXT,
-  city TEXT,
-  user_type TEXT CHECK (user_type IN ('user', 'model')),
-  subscription_tier TEXT DEFAULT 'free' CHECK (subscription_tier IN ('free', 'premium', 'vip', 'model_pro')),
-  profile_photo_url TEXT,
-  email_verified BOOLEAN DEFAULT FALSE,
-  gallery_access BOOLEAN DEFAULT FALSE,
-  terms_accepted BOOLEAN DEFAULT FALSE,
-  terms_accepted_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
+
+-- Create a table for public profiles
+create table profiles (
+  id uuid references auth.users not null primary key,
+  updated_at timestamp with time zone,
+  username text unique,
+  full_name text,
+  avatar_url text,
+  website text,
+
+  constraint username_length check (char_length(username) >= 3)
 );
 
--- Create index for email lookups
-CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
-CREATE INDEX IF NOT EXISTS idx_profiles_user_type ON profiles(user_type);
-CREATE INDEX IF NOT EXISTS idx_profiles_subscription_tier ON profiles(subscription_tier);
+alter table profiles enable row level security;
+
+create policy "Public profiles are viewable by everyone." on profiles
+  for select using (true);
+
+create policy "Users can insert their own profile." on profiles
+  for insert with check (auth.uid() = id);
+
+create policy "Users can update own profile." on profiles
+  for update using (auth.uid() = id);
+
+-- Set up Storage!
+insert into storage.buckets (id, name)
+  values ('avatars', 'avatars');
+
+create policy "Avatar images are publicly accessible." on storage.objects
+  for select using (bucket_id = 'avatars');
+
+create policy "Anyone can upload an avatar." on storage.objects
+  for insert with check (bucket_id = 'avatars');

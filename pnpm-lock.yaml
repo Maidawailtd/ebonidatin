@@ -62,12 +62,6 @@ importers:
       '@sentry/nextjs':
         specifier: latest
         version: 10.23.0(@opentelemetry/context-async-hooks@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.2.0(@opentelemetry/api@1.9.0))(next@14.2.32(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(webpack@5.102.1)
-      '@supabase/ssr':
-        specifier: latest
-        version: 0.7.0(@supabase/supabase-js@2.80.0)
-      '@supabase/supabase-js':
-        specifier: latest
-        version: 2.80.0
       '@vercel/analytics':
         specifier: latest
         version: 1.5.0(next@14.2.32(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(vue-router@4.6.3(vue@3.5.24(typescript@5.9.3)))(vue@3.5.24(typescript@5.9.3))
@@ -172,7 +166,7 @@ importers:
         version: 3.25.76
     devDependencies:
       '@cloudflare/next-on-pages':
-        specifier: latest
+        specifier: '1'
         version: 1.13.16(@cloudflare/workers-types@4.20251109.0)(next@14.2.32(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.56.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(wrangler@4.46.0(@cloudflare/workers-types@4.20251109.0))
       '@cloudflare/workers-types':
         specifier: ^4.20240725.0
@@ -2126,35 +2120,6 @@ packages:
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
 
-  '@supabase/auth-js@2.80.0':
-    resolution: {integrity: sha512-q2LyCVJGN4p7d92cOI7scWOoNwxJhZuFRwiimSUGJGI5zX7ubf1WUPznwOmYEn8WVo3Io+MyMinA7era6j5KPw==}
-    engines: {node: '>=20.0.0'}
-
-  '@supabase/functions-js@2.80.0':
-    resolution: {integrity: sha512-0S/k8LRtoblrbzy4ir9m4WuvU/XTkb1EwL/33/oJexCUHCXtsqaPJ3eKfr1GWtNqTa1zryv6sXs3Fpv7lKCsMQ==}
-    engines: {node: '>=20.0.0'}
-
-  '@supabase/postgrest-js@2.80.0':
-    resolution: {integrity: sha512-yKzehXlRbDoXIQefdRQnvaI9BEogoWIp/7+y/m5enZDKW2IP9aAgq5tU72sThcwftDJvknnIpEHAABG3qviEng==}
-    engines: {node: '>=20.0.0'}
-
-  '@supabase/realtime-js@2.80.0':
-    resolution: {integrity: sha512-cXK6Gs4UDylN8oz40omi01QK0cSCBVj0efXC1WodpENTuDnrkUs28W8/eslEnAtlawaVtikC1Q92mpz9+o85Mg==}
-    engines: {node: '>=20.0.0'}
-
-  '@supabase/ssr@0.7.0':
-    resolution: {integrity: sha512-G65t5EhLSJ5c8hTCcXifSL9Q/ZRXvqgXeNo+d3P56f4U1IxwTqjB64UfmfixvmMcjuxnq2yGqEWVJqUcO+AzAg==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.43.4
-
-  '@supabase/storage-js@2.80.0':
-    resolution: {integrity: sha512-Iepod83h2WoMCaLC9pGb3QOT67Kn3RlUdbXpo3uvbDKfPU8EgytS4RVaPmDjhqDjj8AGaiz9mk/ppd2Q2WS+gw==}
-    engines: {node: '>=20.0.0'}
-
-  '@supabase/supabase-js@2.80.0':
-    resolution: {integrity: sha512-n8pkXQxuo5zCWXX5cbSNZj1vuWS8IVNGWTmP1m31Iq1k0e8lPZ07PF08TRV79HHq3mEPP/Ko//BQuflHvY2o8w==}
-    engines: {node: '>=20.0.0'}
-
   '@swc/counter@0.1.3':
     resolution: {integrity: sha512-e2BR4lsJkkRlKZ/qCHPw9ZaSxc0MVUd7gtbtaB7aMvHeJVYe8sOB8DBZkP2DtISHGSku9sCK6T6cnY0CtXrOCQ==}
 
@@ -2303,9 +2268,6 @@ packages:
   '@types/pg@8.15.5':
     resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
 
-  '@types/phoenix@1.6.6':
-    resolution: {integrity: sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==}
-
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
 
@@ -2322,9 +2284,6 @@ packages:
 
   '@types/tedious@4.0.14':
     resolution: {integrity: sha512-KHPsfX/FoVbUGbyYvk1q9MMQHLPeRZhRJZdO45Q4YjvFkv4hMNghCWTvy7rdKessBsmtz4euWCWAB6/tVpI1Iw==}
-
-  '@types/ws@8.18.1':
-    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   '@vercel/analytics@1.5.0':
     resolution: {integrity: sha512-MYsBzfPki4gthY5HnYN7jgInhAZ7Ac1cYDoRWFomwGHWEX7odTEzbtg9kf/QSo7XEsEAqlQugA6gJ2WS2DEa3g==}
@@ -3980,18 +3939,6 @@ packages:
 
   ws@8.18.0:
     resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
-  ws@8.18.3:
-    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -6349,48 +6296,6 @@ snapshots:
 
   '@standard-schema/utils@0.3.0': {}
 
-  '@supabase/auth-js@2.80.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/functions-js@2.80.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/postgrest-js@2.80.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/realtime-js@2.80.0':
-    dependencies:
-      '@types/phoenix': 1.6.6
-      '@types/ws': 8.18.1
-      tslib: 2.8.1
-      ws: 8.18.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  '@supabase/ssr@0.7.0(@supabase/supabase-js@2.80.0)':
-    dependencies:
-      '@supabase/supabase-js': 2.80.0
-      cookie: 1.0.2
-
-  '@supabase/storage-js@2.80.0':
-    dependencies:
-      tslib: 2.8.1
-
-  '@supabase/supabase-js@2.80.0':
-    dependencies:
-      '@supabase/auth-js': 2.80.0
-      '@supabase/functions-js': 2.80.0
-      '@supabase/postgrest-js': 2.80.0
-      '@supabase/realtime-js': 2.80.0
-      '@supabase/storage-js': 2.80.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   '@swc/counter@0.1.3': {}
 
   '@swc/helpers@0.5.5':
@@ -6527,8 +6432,6 @@ snapshots:
       pg-protocol: 1.10.3
       pg-types: 2.2.0
 
-  '@types/phoenix@1.6.6': {}
-
   '@types/prop-types@15.7.15': {}
 
   '@types/react-dom@18.3.7(@types/react@18.3.26)':
@@ -6543,10 +6446,6 @@ snapshots:
   '@types/shimmer@1.2.0': {}
 
   '@types/tedious@4.0.14':
-    dependencies:
-      '@types/node': 22.19.0
-
-  '@types/ws@8.18.1':
     dependencies:
       '@types/node': 22.19.0
 
@@ -8162,8 +8061,6 @@ snapshots:
       - utf-8-validate
 
   ws@8.18.0: {}
-
-  ws@8.18.3: {}
 
   xtend@4.0.2: {}
 

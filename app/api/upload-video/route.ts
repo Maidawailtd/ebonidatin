@@ -1,17 +1,9 @@
+
 import { type NextRequest, NextResponse } from "next/server";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { uploadFile } from "@/lib/cloudflare/r2";
 import { createClient } from "@/lib/supabase/server";
 
-const s3Client = new S3Client({
-  region: "auto",
-  endpoint: "https://588ead18d8b05c800345a60d5c4f2de7.r2.cloudflarestorage.com/mglink",
-  credentials: {
-    accessKeyId: process.env.CLOUDFLARE_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.CLOUDFLARE_SECRET_ACCESS_KEY!,
-  },
-});
-
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,15 +27,11 @@ export async function POST(request: NextRequest) {
 
     const filename = `videos/${user.id}/${Date.now()}-${file.name}`;
 
-    const command = new PutObjectCommand({
-        Bucket: "mglink",
-        Key: filename,
-        Body: new Uint8Array(await file.arrayBuffer()),
-        ContentType: file.type,
-      });
-      
-    await s3Client.send(command);
-      
+    const fileBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(fileBuffer);
+
+    await uploadFile(filename, buffer);
+
     const publicUrl = `https://ebonidating.com/${filename}`;
 
     const { data: post, error } = await supabase

@@ -1,13 +1,15 @@
--- Create email verifications table
-CREATE TABLE IF NOT EXISTS email_verifications (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  token TEXT UNIQUE NOT NULL,
-  expires_at TIMESTAMP NOT NULL,
-  verified_at TIMESTAMP,
-  created_at TIMESTAMP DEFAULT NOW()
+
+-- Create a table for email verifications
+create table email_verifications (
+  id uuid references auth.users not null primary key,
+  token text not null unique,
+  created_at timestamp with time zone default now()
 );
 
--- Create index for token lookups
-CREATE INDEX IF NOT EXISTS idx_email_verifications_token ON email_verifications(token);
-CREATE INDEX IF NOT EXISTS idx_email_verifications_user_id ON email_verifications(user_id);
+alter table email_verifications enable row level security;
+
+create policy "Users can insert their own email verification." on email_verifications
+  for insert with check (auth.uid() = id);
+
+create policy "Users can update their own email verification." on email_verifications
+  for update using (auth.uid() = id);

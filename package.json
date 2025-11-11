@@ -29,8 +29,6 @@
     "@radix-ui/react-tabs": "latest",
     "@radix-ui/react-tooltip": "latest",
     "@sentry/nextjs": "latest",
-    "@supabase/ssr": "latest",
-    "@supabase/supabase-js": "latest",
     "@vercel/analytics": "latest",
     "@vercel/blob": "latest",
     "@vercel/speed-insights": "latest",
@@ -67,7 +65,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "latest",
+    "@cloudflare/next-on-pages": "1",
     "@cloudflare/workers-types": "^4.20240725.0",
     "@playwright/test": "1.56.1",
     "@tailwindcss/postcss": "4.1.17",
