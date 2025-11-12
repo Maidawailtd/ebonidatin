@@ -1,205 +1,197 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
-import dynamic from "next/dynamic"
+import { Heart, MessageCircle, Share2, Bookmark, Home, Plus, Compass, Mail, HeartIcon, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ResponsiveNav } from "@/components/responsive-nav"
-
-const BannerHero = dynamic(() => import("@/components/banner-hero").then(mod => ({ default: mod.BannerHero })), {
-  loading: () => <div className="w-full h-64 md:h-96 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 animate-pulse" />
-})
-
-const ModelOfPeriod = dynamic(() => import("@/components/model-of-period").then(mod => ({ default: mod.ModelOfPeriod })), {
-  ssr: false,
-  loading: () => <div className="w-full h-96 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 animate-pulse" />
-})
-
-export const metadata = {
-  title: "Home - Find Love in the Black Community",
-  description: "Join thousands of Black singles worldwide finding meaningful connections, love, and friendship in a culturally-rich, safe environment.",
-}
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 
 export default function HomePage() {
-  const models = [
+  const [liked, setLiked] = useState<Record<string, boolean>>({})
+  const [saved, setSaved] = useState<Record<string, boolean>>({})
+
+  const toggleLike = (postId: string) => {
+    setLiked((prev) => ({ ...prev, [postId]: !prev[postId] }))
+  }
+
+  const toggleSave = (postId: string) => {
+    setSaved((prev) => ({ ...prev, [postId]: !prev[postId] }))
+  }
+
+  // Sample stories
+  const stories = [
+    { id: 1, name: "Your Story", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=user", hasStory: true },
+    { id: 2, name: "Sarah", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sarah", hasStory: true },
+    { id: 3, name: "Emma", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=emma", hasStory: true },
+    { id: 4, name: "Jessica", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jessica", hasStory: false },
+    { id: 5, name: "Alex", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=alex", hasStory: true },
+  ]
+
+  // Sample feed posts
+  const posts = [
     {
-      id: "1",
-      name: "Zara",
-      avatar: "/model-1.jpg",
-      images: ["/model-1.jpg", "/model-2.jpg", "/model-3.jpg"],
-      likes: 2450,
-      awardType: "day" as const,
+      id: "post1",
+      author: "Sarah Mitchell",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sarah",
+      image: "/beautiful-woman-portrait.png",
+      caption: "Living my best life 🌟",
+      likes: 1240,
+      comments: 89,
+      timestamp: "2 hours ago",
+      verified: true,
     },
     {
-      id: "2",
-      name: "Amara",
-      avatar: "/model-2.jpg",
-      images: ["/model-2.jpg", "/model-3.jpg", "/model-4.jpg"],
-      likes: 8920,
-      awardType: "week" as const,
+      id: "post2",
+      author: "Emma Rodriguez",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=emma",
+      image: "/modeling-portfolio-professional.jpg",
+      caption: "New portfolio shoot 📸 #modeling",
+      likes: 856,
+      comments: 45,
+      timestamp: "4 hours ago",
+      verified: true,
     },
     {
-      id: "3",
-      name: "Nadia",
-      avatar: "/model-3.jpg",
-      images: ["/model-3.jpg", "/model-4.jpg", "/model-5.jpg"],
-      likes: 24500,
-      awardType: "month" as const,
+      id: "post3",
+      author: "Jessica Chen",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jessica",
+      image: "/fashion-photoshoot.png",
+      caption: "Weekend vibes ✨",
+      likes: 2100,
+      comments: 156,
+      timestamp: "6 hours ago",
+      verified: false,
     },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
-      {/* Responsive Header */}
-      <ResponsiveNav />
-
-      {/* Main Content */}
-      <main>
-        {/* Hero Section */}
-        <section className="container mx-auto px-4 py-6 md:py-8">
-          <BannerHero
-            image="/hero-banner.jpg"
-            title="Find Love Within the Black Community"
-            subtitle="Join thousands of Black singles worldwide finding meaningful connections, love, and friendship."
-            cta={{ text: "Get Started Free", href: "/auth/sign-up" }}
-            priority
-          />
-        </section>
-
-        {/* Top Models Section */}
-        <section className="container mx-auto px-4 py-8 md:py-16">
-        <div className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 md:mb-4">Top Models</h2>
-          <p className="text-base md:text-lg text-gray-600">Meet our most popular members</p>
+    <div className="flex min-h-screen bg-background">
+      <nav className="sidebar-nav bg-card fixed left-0 top-0 h-screen w-64 border-r border-border p-4 flex flex-col">
+        <div className="mb-8">
+          <h1 className="text-2xl font-black">eboni</h1>
         </div>
-        <ModelOfPeriod models={models} />
-      </section>
 
-      {/* How It Works Section */}
-      <section className="bg-gradient-to-b from-white to-amber-50 py-8 md:py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 md:mb-4">How It Works</h2>
-            <p className="text-sm md:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-              Start your journey to finding love in just a few simple steps
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
-            <div className="text-center">
-              <div className="relative mx-auto w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl md:text-3xl font-bold text-white">1</span>
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Create Profile</h3>
-              <p className="text-sm md:text-base text-gray-600">
-                Sign up free and build your profile in under 2 minutes
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="relative mx-auto w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl md:text-3xl font-bold text-white">2</span>
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Get Matched</h3>
-              <p className="text-sm md:text-base text-gray-600">
-                Receive daily matches based on your preferences and interests
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="relative mx-auto w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl md:text-3xl font-bold text-white">3</span>
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Start Chatting</h3>
-              <p className="text-sm md:text-base text-gray-600">
-                Connect and chat with matches who share your values
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="relative mx-auto w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mb-4 shadow-lg">
-                <span className="text-2xl md:text-3xl font-bold text-white">4</span>
-              </div>
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Find Love</h3>
-              <p className="text-sm md:text-base text-gray-600">
-                Meet your perfect match and start your love story
-              </p>
-            </div>
-          </div>
+        <div className="space-y-6 flex-1">
+          <Link href="/" className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+            <Home size={24} />
+            <span className="text-lg">Home</span>
+          </Link>
+          <Link href="/discover" className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+            <Compass size={24} />
+            <span className="text-lg">Discover</span>
+          </Link>
+          <Link href="/messages" className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+            <Mail size={24} />
+            <span className="text-lg">Messages</span>
+          </Link>
+          <Link href="/likes" className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+            <HeartIcon size={24} />
+            <span className="text-lg">Likes</span>
+          </Link>
+          <Link href="/profile" className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+            <User size={24} />
+            <span className="text-lg">Profile</span>
+          </Link>
         </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="container mx-auto px-4 py-8 md:py-16">
-        <div className="bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl md:rounded-2xl p-1">
-          <Card className="max-w-4xl mx-auto border-0 bg-white">
-            <CardContent className="p-6 md:p-8 lg:p-12">
-              <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
-              <div>
-                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-amber-600 mb-1 md:mb-2">50K+</div>
-                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-medium">Active Members</div>
+        <Link href="/auth/signup">
+          <Button className="w-full rounded-full bg-primary text-primary-foreground font-bold py-6 text-base">
+            Sign Up
+          </Button>
+        </Link>
+      </nav>
+
+      {/* Main feed - Offset for sidebar */}
+      <main className="flex-1 md:ml-64">
+        <div className="max-w-2xl mx-auto p-4 pb-24 md:pb-4">
+          {/* Stories Section */}
+          <div className="stories-container mb-6">
+            {stories.map((story) => (
+              <div key={story.id} className={`story ${story.hasStory ? "border-accent" : "border-muted"}`}>
+                <img src={story.avatar || "/placeholder.svg"} alt={story.name} className="w-full h-full object-cover" />
               </div>
-              <div>
-                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-amber-600 mb-1 md:mb-2">10K+</div>
-                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-medium">Successful Matches</div>
-              </div>
-              <div>
-                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-amber-600 mb-1 md:mb-2 flex items-center justify-center gap-0.5 md:gap-1">
-                  4.8
-                  <svg className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 fill-amber-600 text-amber-600" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
+            ))}
+          </div>
+
+          {/* Feed Posts */}
+          {posts.map((post) => (
+            <div key={post.id} className="feed-post">
+              {/* Post Header */}
+              <div className="post-header">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarImage src={post.avatar || "/placeholder.svg"} />
+                    <AvatarFallback>{post.author[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-sm">{post.author}</span>
+                      {post.verified && <span className="text-accent text-xs">✓</span>}
+                    </div>
+                    <span className="text-xs text-muted-foreground">{post.timestamp}</span>
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm md:text-base text-gray-600 font-medium">User Rating</div>
+                <button className="text-muted-foreground hover:text-foreground">
+                  <span className="text-xl">⋮</span>
+                </button>
               </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
 
-        {/* Bottom CTA */}
-        <section className="container mx-auto px-4 py-8 md:py-16">
-          <BannerHero
-            image="/couple-1.jpg"
-            title="Ready to Find Your Match?"
-            subtitle="Join our community today and start connecting with amazing people."
-            cta={{ text: "Sign Up Now", href: "/auth/sign-up" }}
-          />
-        </section>
+              {/* Post Image */}
+              <div className="aspect-square overflow-hidden bg-muted">
+                <img src={post.image || "/placeholder.svg"} alt={post.caption} className="w-full h-full object-cover" />
+              </div>
+
+              {/* Post Actions */}
+              <div className="post-actions">
+                <button onClick={() => toggleLike(post.id)} className="post-action-btn">
+                  {liked[post.id] ? <HeartIcon size={24} className="fill-red-500 text-red-500" /> : <Heart size={24} />}
+                </button>
+                <button className="post-action-btn">
+                  <MessageCircle size={24} />
+                </button>
+                <button className="post-action-btn">
+                  <Share2 size={24} />
+                </button>
+                <button onClick={() => toggleSave(post.id)} className="post-action-btn ml-auto">
+                  {saved[post.id] ? <Bookmark size={24} className="fill-current" /> : <Bookmark size={24} />}
+                </button>
+              </div>
+
+              {/* Post Caption */}
+              <div className="px-4 py-3 border-t border-border">
+                <div className="text-sm mb-2">
+                  <span className="font-semibold">{post.likes.toLocaleString()} likes</span>
+                </div>
+                <div className="text-sm">
+                  <span className="font-semibold">{post.author}</span> <span>{post.caption}</span>
+                </div>
+                <button className="text-xs text-muted-foreground mt-2 hover:text-foreground">
+                  View all {post.comments} comments
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t bg-white mt-16" role="contentinfo">
-        <div className="container mx-auto px-4 py-8 md:py-12">
-          {/* Footer Links */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <Image 
-                src="/eboni-logo.png" 
-                alt="Eboni Dating" 
-                width={20} 
-                height={20}
-              />
-              <span className="font-semibold text-gray-900">Eboni Dating</span>
-            </div>
-            <div className="flex items-center gap-6 text-sm text-gray-600">
-              <Link href="/terms" className="hover:text-amber-600 transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/privacy" className="hover:text-amber-600 transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="/pricing" className="hover:text-amber-600 transition-colors">
-                Pricing
-              </Link>
-              <Link href="/contact" className="hover:text-amber-600 transition-colors">
-                Contact Us
-              </Link>
-            </div>
-          </div>
-          <div className="text-center mt-6 text-sm text-gray-500">
-            © 2024 Eboni Dating. All rights reserved.
-            <br />
-            Celebrating Black love and connections worldwide.
-          </div>
-        </div>
-      </footer>
+      {/* Bottom Navigation - Mobile Only */}
+      <nav className="bottom-nav">
+        <Link href="/" className="hover:opacity-60">
+          <Home size={24} />
+        </Link>
+        <Link href="/discover" className="hover:opacity-60">
+          <Compass size={24} />
+        </Link>
+        <Link href="/create" className="hover:opacity-60">
+          <Plus size={24} />
+        </Link>
+        <Link href="/likes" className="hover:opacity-60">
+          <HeartIcon size={24} />
+        </Link>
+        <Link href="/profile" className="hover:opacity-60">
+          <User size={24} />
+        </Link>
+      </nav>
     </div>
   )
 }

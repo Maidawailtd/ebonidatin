@@ -1,24 +1,21 @@
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
-import { NextResponse, type NextRequest } from 'next/server'
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get("token")?.value
+  const { pathname } = request.nextUrl
 
-export async function middleware(request: NextRequest) {
-  // TODO: Add your own middleware logic here.
-  return NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  // Protected routes
+  const protectedRoutes = ["/dashboard", "/profile", "/discover", "/matches", "/messages"]
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
+
+  if (isProtectedRoute && !token) {
+    return NextResponse.redirect(new URL("/auth/login", request.url))
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|public).*)"],
 }

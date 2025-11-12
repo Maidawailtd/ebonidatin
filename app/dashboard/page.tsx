@@ -1,75 +1,163 @@
-import { createClient } from '@/lib/supabase/server';
-import { redirect } from 'next/navigation';
+"use client"
 
-export const dynamic = 'force-dynamic';
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default async function DashboardPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+export default function DashboardPage() {
+  const [user, setUser] = useState<any>(null)
+  const [stats, setStats] = useState({ unreadMessages: 0, newLikes: 0, newMatches: 0 })
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
-  if (!user) {
-    redirect('/auth/login');
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      router.push("/auth/login")
+      return
+    }
+
+    const fetchData = async () => {
+      try {
+        const [profileRes, notificationsRes] = await Promise.all([
+          fetch("/api/profiles/me", { headers: { Authorization: `Bearer ${token}` } }),
+          fetch("/api/notifications", { headers: { Authorization: `Bearer ${token}` } }),
+        ])
+
+        if (profileRes.ok) {
+          const profileData = await profileRes.json()
+          setUser(profileData.user)
+        }
+
+        if (notificationsRes.ok) {
+          const notifyData = await notificationsRes.json()
+          setStats(notifyData)
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [router])
+
+  if (loading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
   }
 
-  // Get user profile
-  const { data: profile } = await supabase
-    .from('core.profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+  if (!user) {
+    return null
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Eboni Dating</h1>
-            <div className="flex items-center gap-4">
-              <a href="/explore" className="text-gray-600 hover:text-gray-900">Explore</a>
-              <a href="/channels" className="text-gray-600 hover:text-gray-900">Channels</a>
-              <a href={`/profile/${user.id}`} className="text-gray-600 hover:text-gray-900">Profile</a>
-            </div>
-          </div>
+    <main className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <Button
+            variant="outline"
+            onClick={() => {
+              localStorage.removeItem("token")
+              router.push("/")
+            }}
+          >
+            Logout
+          </Button>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          {/* Welcome Section */}
-          <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              Welcome, {profile?.display_name || profile?.full_name}!
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Your personalized feed is ready. Start following users to see their posts here.
-            </p>
-            <div className="flex gap-4">
-              <a
-                href="/explore"
-                className="inline-block bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-              >
-                Explore
-              </a>
-              <a
-                href={`/profile/${user.id}`}
-                className="inline-block bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-2 px-6 rounded-lg transition-colors"
-              >
-                Edit Profile
-              </a>
-            </div>
-          </div>
-
-          {/* Feed Placeholder */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Feed</h3>
-            <p className="text-gray-600 text-center py-8">
-              No posts yet. Follow some users to see their content here!
-            </p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-2xl font-bold text-purple-600">{stats.newLikes}</div>
+              <p className="text-sm text-gray-600">New Likes</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-2xl font-bold text-pink-600">{stats.newMatches}</div>
+              <p className="text-sm text-gray-600">New Matches</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-2xl font-bold text-blue-600">{stats.unreadMessages}</div>
+              <p className="text-sm text-gray-600">Unread Messages</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-lg font-bold">{user.subscription_tier || "Free"}</div>
+              <p className="text-sm text-gray-600">Subscription</p>
+            </CardContent>
+          </Card>
         </div>
+
+        <Tabs defaultValue="discover" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="discover">Discover</TabsTrigger>
+            <TabsTrigger value="matches">Matches</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="discover" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Discover People</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Link href="/discover">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600">Start Exploring</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="matches" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Matches</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Link href="/matches">
+                  <Button className="w-full">View Matches</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="messages" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Messages</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Link href="/messages">
+                  <Button className="w-full">View Messages</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="profile" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>My Profile</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Link href="/profile/edit">
+                  <Button className="w-full">Edit Profile</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
-    </div>
-  );
+    </main>
+  )
 }
