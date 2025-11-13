@@ -1,57 +1,66 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronLeft, Heart } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function DiscoverPage() {
+  const [profiles, setProfiles] = useState<any[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [liked, setLiked] = useState<Set<number>>(new Set())
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const profiles = [
-    {
-      id: 1,
-      name: "Sarah Mitchell",
-      age: 24,
-      image: "/beautiful-woman-portrait-model.jpg",
-      bio: "Model | Photographer | Coffee lover",
-      location: "Los Angeles, CA",
-      verified: true,
-      interests: ["Photography", "Travel", "Fashion"],
-    },
-    {
-      id: 2,
-      name: "Emma Rodriguez",
-      age: 23,
-      image: "/professional-model-photoshoot.jpg",
-      bio: "Aspiring model | Fitness enthusiast",
-      location: "New York, NY",
-      verified: true,
-      interests: ["Fitness", "Fashion", "Art"],
-    },
-    {
-      id: 3,
-      name: "Jessica Chen",
-      age: 25,
-      image: "/female-model-professional.jpg",
-      bio: "Content creator | Model",
-      location: "Miami, FL",
-      verified: false,
-      interests: ["Social Media", "Travel", "Design"],
-    },
-  ]
-
-  const current = profiles[currentIndex]
+  useEffect(() => {
+    async function fetchProfiles() {
+      try {
+        const response = await fetch("/api/discover")
+        if (!response.ok) {
+          throw new Error("Failed to fetch profiles")
+        }
+        const data = await response.json()
+        setProfiles(data.profiles)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProfiles()
+  }, [])
 
   const handlePass = () => {
     setCurrentIndex((currentIndex + 1) % profiles.length)
   }
 
-  const handleLike = () => {
-    setLiked(new Set([...liked, current.id]))
-    handlePass()
+  const handleLike = async () => {
+    try {
+      const likedUserId = profiles[currentIndex].id
+      const response = await fetch("/api/likes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ likedUserId }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to like profile")
+      }
+
+      handlePass() // Move to the next profile after a successful like
+    } catch (err: any) {
+      setError(err.message)
+    }
   }
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
+
+  const current = profiles[currentIndex]
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
@@ -72,8 +81,8 @@ export default function DiscoverPage() {
             {/* Profile Image */}
             <div className="relative h-96 bg-muted overflow-hidden">
               <img
-                src={current.image || "/placeholder.svg"}
-                alt={current.name}
+                src={current.primary_photo_url || "/placeholder.svg"}
+                alt={current.first_name}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -82,7 +91,7 @@ export default function DiscoverPage() {
               <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                 <div className="flex items-center gap-2 mb-2">
                   <h2 className="text-2xl font-bold">
-                    {current.name}, {current.age}
+                    {current.first_name}, {current.age}
                   </h2>
                   {current.verified && <span className="text-blue-400">✓</span>}
                 </div>
@@ -100,7 +109,7 @@ export default function DiscoverPage() {
               <div>
                 <p className="font-semibold mb-2">Interests</p>
                 <div className="flex flex-wrap gap-2">
-                  {current.interests.map((interest) => (
+                  {current.interests && current.interests.map((interest: string) => (
                     <span key={interest} className="px-3 py-1 bg-muted text-xs rounded-full">
                       {interest}
                     </span>
@@ -125,11 +134,6 @@ export default function DiscoverPage() {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Liked Count */}
-      <div className="mt-8 text-center">
-        <p className="text-sm text-muted-foreground">You've liked {liked.size} profiles</p>
       </div>
     </div>
   )

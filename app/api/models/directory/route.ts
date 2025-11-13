@@ -1,54 +1,66 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { queryDb } from "@/lib/db"
+
+import { type NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const page = Number.parseInt(searchParams.get("page") || "1")
-    const portfolioType = searchParams.get("portfolioType")
-    const experienceLevel = searchParams.get("experienceLevel")
-    const verified = searchParams.get("verified") === "true"
-    const limit = 20
-    const offset = (page - 1) * limit
+    const searchParams = request.nextUrl.searchParams;
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const portfolioType = searchParams.get("portfolioType");
+    const experienceLevel = searchParams.get("experienceLevel");
+    const verified = searchParams.get("verified") === "true";
+    const limit = 20;
+    const offset = (page - 1) * limit;
 
-    let query = `
-      SELECT u.id, u.username,
-             up.first_name, up.age, up.bio,
-             mp.portfolio_type, mp.height, mp.weight, mp.dress_size, mp.verified_model, mp.rate_per_hour,
-             pp.photo_url
-      FROM users u
-      JOIN model_portfolios mp ON u.id = mp.user_id
-      LEFT JOIN user_profiles up ON u.id = up.user_id
-      LEFT JOIN profile_photos pp ON u.id = pp.user_id AND pp.is_primary = TRUE
-      WHERE u.account_type = 'model'
-        AND u.email_verified = TRUE
-        AND u.deleted_at IS NULL
-    `
-
-    const params: any[] = []
+    let query = supabase
+      .from("model_portfolios")
+      .select(`
+        user_id,
+        portfolio_type,
+        height,
+        weight,
+        dress_size,
+        verified_model,
+        rate_per_hour,
+        users (
+          id,
+          username
+        ),
+        user_profiles (
+          first_name,
+          age,
+          bio
+        ),
+        profile_photos (
+          photo_url
+        )
+      `)
+      .eq("users.account_type", "model")
+      .eq("users.email_verified", true)
+      .is("users.deleted_at", null)
+      .range(offset, offset + limit - 1)
+      .order("verified_model", { ascending: false })
+      .order("created_at", { ascending: false, referencedTable: "users" });
 
     if (portfolioType) {
-      query += ` AND mp.portfolio_type = ?`
-      params.push(portfolioType)
+      query = query.eq("portfolio_type", portfolioType);
     }
 
     if (experienceLevel) {
-      query += ` AND mp.experience_level = ?`
-      params.push(experienceLevel)
+      query = query.eq("experience_level", experienceLevel);
     }
 
     if (verified) {
-      query += ` AND mp.verified_model = TRUE`
+      query = query.eq("verified_model", true);
     }
 
-    query += ` ORDER BY mp.verified_model DESC, u.created_at DESC LIMIT ? OFFSET ?`
-    params.push(limit, offset)
+    const { data: models, error } = await query;
 
-    const models = await queryDb(query, params)
+    if (error) throw error;
 
-    return NextResponse.json({ models })
+    return NextResponse.json({ models });
   } catch (error) {
-    console.error("Get models directory error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Get models directory error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

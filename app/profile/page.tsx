@@ -1,28 +1,40 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ChevronLeft, Settings, Share2, MoreHorizontal } from "lucide-react"
 
 export default function ProfilePage() {
-  const profile = {
-    name: "You",
-    username: "@yourname",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=user",
-    bio: "Model | Photographer | Living my best life 🌟",
-    followers: "2,458",
-    following: "892",
-    posts: "127",
-    verified: true,
-    photos: [
-      "/woman-portrait-1.png",
-      "/woman-portrait-2.png",
-      "/woman-portrait-3.png",
-      "/woman-portrait-4.png",
-      "/woman-portrait-5.png",
-      "/woman-portrait-6.png",
-    ],
+  const [profile, setProfile] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await fetch("/api/auth/user")
+        if (!response.ok) {
+          throw new Error("Failed to fetch profile")
+        }
+        const data = await response.json()
+        setProfile(data)
+      } catch (err: any) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProfile()
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
   }
 
   return (
@@ -48,7 +60,7 @@ export default function ProfilePage() {
           <div className="flex items-start gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage src={profile.avatar || "/placeholder.svg"} />
-              <AvatarFallback>{profile.name[0]}</AvatarFallback>
+              <AvatarFallback>{profile.name ? profile.name[0] : ''}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
@@ -60,15 +72,15 @@ export default function ProfilePage() {
               {/* Stats */}
               <div className="flex gap-8 mb-3">
                 <div className="text-center">
-                  <p className="font-bold text-lg">{profile.posts}</p>
+                  <p className="font-bold text-lg">{profile.posts_count || 0}</p>
                   <p className="text-xs text-muted-foreground">Posts</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-bold text-lg">{profile.followers}</p>
+                  <p className="font-bold text-lg">{profile.followers_count || 0}</p>
                   <p className="text-xs text-muted-foreground">Followers</p>
                 </div>
                 <div className="text-center">
-                  <p className="font-bold text-lg">{profile.following}</p>
+                  <p className="font-bold text-lg">{profile.following_count || 0}</p>
                   <p className="text-xs text-muted-foreground">Following</p>
                 </div>
               </div>
@@ -98,13 +110,13 @@ export default function ProfilePage() {
         <div>
           <div className="text-sm font-semibold mb-4">Posts</div>
           <div className="grid grid-cols-3 gap-1">
-            {profile.photos.map((photo, index) => (
+            {profile.photos && profile.photos.map((photo: any, index: number) => (
               <div
                 key={index}
                 className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
               >
                 <img
-                  src={photo || "/placeholder.svg"}
+                  src={photo.photo_url || "/placeholder.svg"}
                   alt={`Post ${index + 1}`}
                   className="w-full h-full object-cover"
                 />

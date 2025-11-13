@@ -1,33 +1,61 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getOne, queryDb } from "@/lib/db"
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ modelId: string }> }) {
+import { type NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/auth";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { modelId: string } }
+) {
   try {
-    const { modelId } = await params
+    const { modelId } = params;
 
-    const userData = await getOne(
-      'SELECT * FROM users WHERE id = ? AND account_type = "model" AND deleted_at IS NULL',
-      [modelId],
-    )
+    const { data: user, error: userError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", modelId)
+      .eq("account_type", "model")
+      .is("deleted_at", null)
+      .single();
 
-    if (!userData) {
-      return NextResponse.json({ error: "Model not found" }, { status: 404 })
+    if (userError) {
+      if (userError.code === "PGRST116") {
+        return NextResponse.json({ error: "Model not found" }, { status: 404 });
+      }
+      throw userError;
     }
 
-    const profile = await getOne("SELECT * FROM user_profiles WHERE user_id = ?", [modelId])
+    const { data: profile, error: profileError } = await supabase
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", modelId)
+      .single();
 
-    const portfolio = await getOne("SELECT * FROM model_portfolios WHERE user_id = ?", [modelId])
+    if (profileError && profileError.code !== "PGRST116") throw profileError;
 
-    const photos = await queryDb("SELECT * FROM profile_photos WHERE user_id = ? ORDER BY display_order ASC", [modelId])
+    const { data: portfolio, error: portfolioError } = await supabase
+      .from("model_portfolios")
+      .select("*")
+      .eq("user_id", modelId)
+      .single();
+
+    if (portfolioError && portfolioError.code !== "PGRST116") throw portfolioError;
+
+    const { data: photos, error: photosError } = await supabase
+      .from("profile_photos")
+      .select("*")
+      .eq("user_id", modelId)
+      .order("display_order", { ascending: true });
+
+    if (photosError) throw photosError;
 
     return NextResponse.json({
-      user: userData,
+      user,
       profile,
-      portfolio: portfolio ? { ...portfolio, measurements: JSON.parse(portfolio.measurements || "{}") } : null,
+      portfolio,
       photos,
-    })
+    });
   } catch (error) {
-    console.error("Get model error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Get model error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
