@@ -10,19 +10,19 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Eboni Dating - Connect with Real People",
   description:
-    "Find genuine connections, explore amazing profiles, and start dating today. Eboni Dating is the platform for real connections.",
+    "Find genuine connections, explore amazing profiles, and start dating today. Eboni Dating is the web platform for real connections.",
   generator: "v0.app",
-  keywords: ["dating", "relationships", "matches", "dating app", "connections"],
+  keywords: ["dating", "relationships", "matches", "dating website", "online dating", "connections"],
   authors: [{ name: "Eboni Dating" }],
   openGraph: {
     title: "Eboni Dating - Connect with Real People",
-    description: "Find genuine connections and start dating today",
+    description: "Find genuine connections and start dating today on our web platform",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Eboni Dating - Connect with Real People",
-    description: "Find genuine connections and start dating today",
+    description: "Find genuine connections and start dating today on our web platform",
   },
   icons: {
     icon: [
