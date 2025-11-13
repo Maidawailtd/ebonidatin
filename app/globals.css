@@ -175,6 +175,12 @@
   @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
 }
 
+/* Button focus improvements */
+button:focus-visible,
+a:focus-visible {
+  @apply outline-2 outline-offset-2 outline-ring;
+}
+
 /* Smooth animations */
 @keyframes fadeIn {
   from {

@@ -75,7 +75,7 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar Navigation - Desktop */}
-      <nav className="sidebar-nav bg-card fixed left-0 top-0 h-screen w-64 border-r border-border p-6 flex flex-col hidden md:flex z-50">
+      <nav aria-label="Main navigation" className="sidebar-nav bg-card fixed left-0 top-0 h-screen w-64 border-r border-border p-6 flex flex-col hidden md:flex z-50">
         <div className="mb-10">
           <h1 className="text-3xl font-black bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
             eboni
@@ -156,7 +156,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto p-4 md:p-8 pb-24 md:pb-8">
+        <div className="max-w-7xl mx-auto p-4 md:p-8 pb-32 md:pb-8">
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             <Card className="border-2 hover:shadow-lg transition-shadow">
@@ -215,6 +215,10 @@ export default function HomePage() {
                       src={profile.image || "/placeholder.svg"}
                       alt={profile.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/placeholder.svg";
+                      }}
                     />
                     {profile.online && (
                       <div className="absolute top-4 right-4 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
@@ -312,7 +316,7 @@ export default function HomePage() {
       </main>
 
       {/* Bottom Navigation - Mobile Only */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 flex items-center justify-around md:hidden z-50 shadow-lg">
+      <nav aria-label="Mobile navigation" className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 flex items-center justify-around md:hidden z-50 shadow-lg">
         <Link href="/" className="flex flex-col items-center gap-1 text-primary">
           <Sparkles size={24} />
           <span className="text-xs font-medium">Discover</span>

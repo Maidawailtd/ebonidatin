@@ -12,6 +12,18 @@ export const metadata: Metadata = {
   description:
     "Find genuine connections, explore amazing profiles, and start dating today. Eboni Dating is the platform for real connections.",
   generator: "v0.app",
+  keywords: ["dating", "relationships", "matches", "dating app", "connections"],
+  authors: [{ name: "Eboni Dating" }],
+  openGraph: {
+    title: "Eboni Dating - Connect with Real People",
+    description: "Find genuine connections and start dating today",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Eboni Dating - Connect with Real People",
+    description: "Find genuine connections and start dating today",
+  },
   icons: {
     icon: [
       {
