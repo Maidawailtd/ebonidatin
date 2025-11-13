@@ -1,142 +1,84 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getOne, queryDb, runDb } from "@/lib/db"
-import { getAuthUser } from "@/lib/middleware-auth"
+import { type NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request)
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const profile = await getOne("SELECT * FROM user_profiles WHERE user_id = ?", [user.userId])
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
 
-    const photos = await queryDb("SELECT * FROM profile_photos WHERE user_id = ? ORDER BY display_order ASC", [
-      user.userId,
-    ])
+    if (profileError && profileError.code !== 'PGRST116') throw profileError;
 
-    const userData = await getOne(
-      "SELECT id, email, username, account_type, subscription_tier, created_at FROM users WHERE id = ?",
-      [user.userId],
-    )
+    const { data: photos, error: photosError } = await supabase
+      .from('profile_photos')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('display_order', { ascending: true });
+
+    if (photosError) throw photosError;
 
     return NextResponse.json({
-      user: userData,
-      profile,
-      photos,
-    })
+      user,
+      profile: profile || {},
+      photos: photos || [],
+    });
   } catch (error) {
-    console.error("Get profile error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Get profile error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getAuthUser(request)
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json()
-    const {
-      firstName,
-      lastName,
-      bio,
-      age,
-      gender,
-      lookingFor,
-      locationCity,
-      locationState,
-      locationCountry,
-      latitude,
-      longitude,
-      interestedIn,
-      ethnicity,
-      bodyType,
-      height,
-      relationshipStatus,
-      haveChildren,
-      wantChildren,
-      education,
-      occupation,
-      incomeRange,
-      datingPreferences,
-    } = body
+    const body = await request.json();
+    const updateData: { [key: string]: any } = {};
 
-    // Calculate profile completion
+    for (const key in body) {
+        if (body[key] !== undefined) {
+            const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+            updateData[snakeKey] = body[key];
+        }
+    }
+
     const profileFields = [
-      firstName,
-      lastName,
-      bio,
-      age,
-      gender,
-      lookingFor,
-      locationCity,
-      ethnicity,
-      bodyType,
-      height,
-    ].filter(Boolean).length
-    const completionPercent = Math.round((profileFields / 10) * 100)
+        body.firstName,
+        body.lastName,
+        body.bio,
+        body.age,
+        body.gender,
+        body.lookingFor,
+        body.locationCity,
+        body.ethnicity,
+        body.bodyType,
+        body.height,
+      ].filter(Boolean).length;
+      updateData.profile_completion_percent = Math.round((profileFields / 10) * 100);
 
-    await runDb(
-      `UPDATE user_profiles SET
-        first_name = ?,
-        last_name = ?,
-        bio = ?,
-        age = ?,
-        gender = ?,
-        looking_for = ?,
-        location_city = ?,
-        location_state = ?,
-        location_country = ?,
-        latitude = ?,
-        longitude = ?,
-        interested_in = ?,
-        ethnicity = ?,
-        body_type = ?,
-        height = ?,
-        relationship_status = ?,
-        have_children = ?,
-        want_children = ?,
-        education = ?,
-        occupation = ?,
-        income_range = ?,
-        dating_preferences = ?,
-        profile_completion_percent = ?,
-        updated_at = CURRENT_TIMESTAMP
-       WHERE user_id = ?`,
-      [
-        firstName,
-        lastName,
-        bio,
-        age,
-        gender,
-        lookingFor,
-        locationCity,
-        locationState,
-        locationCountry,
-        latitude,
-        longitude,
-        JSON.stringify(interestedIn),
-        ethnicity,
-        bodyType,
-        height,
-        relationshipStatus,
-        haveChildren,
-        wantChildren,
-        education,
-        occupation,
-        incomeRange,
-        JSON.stringify(datingPreferences),
-        completionPercent,
-        user.userId,
-      ],
-    )
+    if (Object.keys(updateData).length > 0) {
+        updateData.updated_at = new Date();
+        const { error } = await supabase
+            .from('user_profiles')
+            .update(updateData)
+            .eq('user_id', user.id);
 
-    return NextResponse.json({ success: true })
+        if (error) throw error;
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Update profile error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Update profile error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

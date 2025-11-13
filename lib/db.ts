@@ -1,63 +1,62 @@
-import type { D1Database, R2Bucket } from "@cloudflare/workers-types"
+import { supabase } from './auth';
 
-export interface CloudflareEnv {
-  DB: D1Database
-  BUCKET: R2Bucket
-  STRIPE_SECRET_KEY: string
-  SENDGRID_API_KEY: string
-  JWT_SECRET: string
-  NEXT_PUBLIC_JWT_SECRET: string
-}
-
-let db: D1Database | null = null
-
-export function initializeDb(database: D1Database) {
-  db = database
-}
-
-export function getDb(): D1Database {
-  if (!db) {
-    throw new Error("Database not initialized")
+export async function queryDb<T>(query: string, params?: any[]): Promise<T[]> {
+  const { data, error } = await supabase.rpc(query, params);
+  if (error) {
+    console.error('Error querying database:', error);
+    throw error;
   }
-  return db
+  return data as T[];
 }
 
-export async function queryDb<T>(query: string, params?: (string | number | boolean | null)[]): Promise<T[]> {
-  const database = getDb()
-  const result = await database
-    .prepare(query)
-    .bind(...(params || []))
-    .all()
-  return (result.results || []) as T[]
+export async function runDb(query: string, params?: any[]): Promise<any> {
+  const { data, error } = await supabase.rpc(query, params);
+  if (error) {
+    console.error('Error running database query:', error);
+    throw error;
+  }
+  return data;
 }
 
-export async function runDb(query: string, params?: (string | number | boolean | null)[]): Promise<any> {
-  const database = getDb()
-  const result = await database
-    .prepare(query)
-    .bind(...(params || []))
-    .run()
-  return result
+export async function getOne<T>(tableName: string, column: string, value: any): Promise<T | null> {
+  const { data, error } = await supabase
+    .from(tableName)
+    .select('*')
+    .eq(column, value)
+    .limit(1);
+
+  if (error) {
+    console.error('Error getting record:', error);
+    return null;
+  }
+
+  return data && data.length > 0 ? (data[0] as T) : null;
 }
 
-export async function getOne<T>(query: string, params?: (string | number | boolean | null)[]): Promise<T | null> {
-  const results = await queryDb<T>(query, params)
-  return results[0] || null
-}
-
-// Helper functions for common queries
 export async function getUserById(userId: string) {
-  return getOne("SELECT * FROM users WHERE id = ? AND deleted_at IS NULL", [userId])
+  return getOne('users', 'id', userId);
 }
 
 export async function getUserByEmail(email: string) {
-  return getOne("SELECT * FROM users WHERE email = ? AND deleted_at IS NULL", [email])
+  return getOne('users', 'email', email);
 }
 
 export async function getUserProfile(userId: string) {
-  return getOne("SELECT * FROM user_profiles WHERE user_id = ?", [userId])
+  return getOne('user_profiles', 'user_id', userId);
 }
 
 export async function getUserPhotos(userId: string) {
-  return queryDb("SELECT * FROM profile_photos WHERE user_id = ? ORDER BY display_order ASC", [userId])
+    const { data, error } = await supabase
+    .from('profile_photos')
+    .select('*')
+    .eq('user_id', userId)
+    .order('display_order', { ascending: true });
+
+  if (error) {
+    console.error('Error getting user photos:', error);
+    return [];
+  }
+
+  return data;
+
 }

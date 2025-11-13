@@ -1,30 +1,45 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { getOne, queryDb } from "@/lib/db"
+import { type NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/auth";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
   try {
-    const { userId } = await params
+    const { userId } = params;
 
-    const profile = await getOne("SELECT * FROM user_profiles WHERE user_id = ?", [userId])
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (profileError && profileError.code !== 'PGRST116') throw profileError;
 
     if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 })
+        return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    const photos = await queryDb("SELECT * FROM profile_photos WHERE user_id = ? ORDER BY display_order ASC", [userId])
+    const { data: photos, error: photosError } = await supabase
+      .from('profile_photos')
+      .select('*')
+      .eq('user_id', userId)
+      .order('display_order', { ascending: true });
 
-    const userData = await getOne(
-      "SELECT id, email, username, account_type, subscription_tier, created_at FROM users WHERE id = ? AND deleted_at IS NULL",
-      [userId],
-    )
+    if (photosError) throw photosError;
+
+    const { data: user, error: userError } = await supabase
+      .from('users')
+      .select('id, email, username, account_type, subscription_tier, created_at')
+      .eq('id', userId)
+      .single();
+
+    if (userError) throw userError;
 
     return NextResponse.json({
-      user: userData,
+      user,
       profile,
       photos,
-    })
+    });
   } catch (error) {
-    console.error("Get profile error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Get profile error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

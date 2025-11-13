@@ -1,90 +1,93 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { queryDb, runDb, getOne } from "@/lib/db"
-import { getAuthUser } from "@/lib/middleware-auth"
-import { generateId } from "@/lib/auth"
+import { type NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request)
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const blocked = await queryDb(
-      `SELECT u.id, u.username, up.first_name, pp.photo_url
-       FROM blocks b
-       JOIN users u ON b.blocked_user_id = u.id
-       LEFT JOIN user_profiles up ON u.id = up.user_id
-       LEFT JOIN profile_photos pp ON u.id = pp.user_id AND pp.is_primary = TRUE
-       WHERE b.blocker_id = ?
-       ORDER BY b.created_at DESC`,
-      [user.userId],
-    )
+    const { data: blocked, error } = await supabase
+      .from('blocks')
+      .select(`
+        blocked_user_id,
+        users:blocked_user_id ( id, username ),
+        user_profiles:blocked_user_id ( first_name ),
+        profile_photos:blocked_user_id ( photo_url )
+      `)
+      .eq('blocker_id', user.id);
 
-    return NextResponse.json({ blocked })
+    if (error) throw error;
+
+    return NextResponse.json({ blocked });
   } catch (error) {
-    console.error("Get blocks error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Get blocks error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request)
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const body = await request.json()
-    const { blockedUserId, reason } = body
+    const body = await request.json();
+    const { blockedUserId, reason } = body;
 
     if (!blockedUserId) {
-      return NextResponse.json({ error: "Missing blockedUserId" }, { status: 400 })
+      return NextResponse.json({ error: "Missing blockedUserId" }, { status: 400 });
     }
 
-    const existing = await getOne("SELECT id FROM blocks WHERE blocker_id = ? AND blocked_user_id = ?", [
-      user.userId,
-      blockedUserId,
-    ])
+    const { data: existing, error: existingError } = await supabase
+      .from('blocks')
+      .select('id')
+      .eq('blocker_id', user.id)
+      .eq('blocked_user_id', blockedUserId)
+      .single();
 
     if (existing) {
-      return NextResponse.json({ error: "User already blocked" }, { status: 409 })
+      return NextResponse.json({ error: "User already blocked" }, { status: 409 });
     }
 
-    const blockId = generateId()
-    await runDb("INSERT INTO blocks (id, blocker_id, blocked_user_id, reason) VALUES (?, ?, ?, ?)", [
-      blockId,
-      user.userId,
-      blockedUserId,
-      reason || "User blocked",
-    ])
+    const { error } = await supabase.from('blocks').insert([
+      { blocker_id: user.id, blocked_user_id: blockedUserId, reason: reason || "User blocked" },
+    ]);
 
-    return NextResponse.json({ success: true })
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Block user error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Block user error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getAuthUser(request)
+    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const searchParams = request.nextUrl.searchParams
-    const blockedUserId = searchParams.get("blockedUserId")
+    const searchParams = request.nextUrl.searchParams;
+    const blockedUserId = searchParams.get("blockedUserId");
 
     if (!blockedUserId) {
-      return NextResponse.json({ error: "Missing blockedUserId" }, { status: 400 })
+      return NextResponse.json({ error: "Missing blockedUserId" }, { status: 400 });
     }
 
-    await runDb("DELETE FROM blocks WHERE blocker_id = ? AND blocked_user_id = ?", [user.userId, blockedUserId])
+    const { error } = await supabase.from('blocks').delete()
+      .eq('blocker_id', user.id)
+      .eq('blocked_user_id', blockedUserId);
 
-    return NextResponse.json({ success: true })
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Unblock user error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Unblock user error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
