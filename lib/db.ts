@@ -1,42 +1,38 @@
-import type { D1Database, R2Bucket } from "@cloudflare/workers-types"
+import { Pool } from 'pg'
 
-export interface CloudflareEnv {
-  DB: D1Database
-  BUCKET: R2Bucket
-  STRIPE_SECRET_KEY: string
-  SENDGRID_API_KEY: string
-  JWT_SECRET: string
-  NEXT_PUBLIC_JWT_SECRET: string
-}
+// PostgreSQL connection pool
+let pool: Pool | null = null
 
-let db: D1Database | null = null
-
-export function initializeDb(database: D1Database) {
-  db = database
-}
-
-export function getDb(): D1Database {
-  if (!db) {
-    throw new Error("Database not initialized")
+function getPool(): Pool {
+  if (!pool) {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+    })
   }
-  return db
+  return pool
 }
 
 export async function queryDb<T>(query: string, params?: (string | number | boolean | null)[]): Promise<T[]> {
-  const database = getDb()
-  const result = await database
-    .prepare(query)
-    .bind(...(params || []))
-    .all()
-  return (result.results || []) as T[]
+  const client = getPool()
+  
+  // Convert SQLite-style ? placeholders to PostgreSQL $1, $2, etc.
+  let pgQuery = query
+  let paramIndex = 1
+  pgQuery = pgQuery.replace(/\?/g, () => `$${paramIndex++}`)
+  
+  const result = await client.query(pgQuery, params || [])
+  return result.rows as T[]
 }
 
 export async function runDb(query: string, params?: (string | number | boolean | null)[]): Promise<any> {
-  const database = getDb()
-  const result = await database
-    .prepare(query)
-    .bind(...(params || []))
-    .run()
+  const client = getPool()
+  
+  // Convert SQLite-style ? placeholders to PostgreSQL $1, $2, etc.
+  let pgQuery = query
+  let paramIndex = 1
+  pgQuery = pgQuery.replace(/\?/g, () => `$${paramIndex++}`)
+  
+  const result = await client.query(pgQuery, params || [])
   return result
 }
 
