@@ -5,7 +5,7 @@
   "description": "Complete dating and modeling platform",
   "scripts": {
     "build": "next build",
-    "cf-build": "next build && wrangler pages publish .next",
+    "cf-build": "next build && wrangler pages deploy .next",
     "cf-dev": "wrangler pages dev -- npm run dev",
     "dev": "next dev",
     "lint": "eslint .",
