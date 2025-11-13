@@ -7,9 +7,9 @@
     "build": "next build",
     "cf-build": "next build && wrangler pages deploy .next",
     "cf-dev": "wrangler pages dev -- npm run dev",
-    "dev": "next dev",
+    "dev": "next dev -p 5000 -H 0.0.0.0",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start -p 5000 -H 0.0.0.0"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
