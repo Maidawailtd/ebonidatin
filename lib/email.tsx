@@ -9,7 +9,9 @@ export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
   const apiKey = process.env.SENDGRID_API_KEY
 
   if (!apiKey) {
-    console.error("SendGrid API key not configured")
+    if (process.env.NODE_ENV !== 'production') {
+      console.error("SendGrid API key not configured")
+    }
     return false
   }
 
@@ -43,7 +45,9 @@ export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
 
     return response.ok
   } catch (error) {
-    console.error("Email send failed:", error)
+    if (process.env.NODE_ENV !== 'production') {
+      console.error("Email send failed:", error)
+    }
     return false
   }
 }

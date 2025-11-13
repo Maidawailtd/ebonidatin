@@ -9,11 +9,12 @@ export interface JWTPayload {
   email: string
   accountType: string
   subscriptionTier: string
+  [key: string]: any
 }
 
 export async function generateToken(payload: JWTPayload): Promise<string> {
   const secret = new TextEncoder().encode(JWT_SECRET)
-  const token = await new SignJWT(payload).setProtectedHeader({ alg: ALGORITHM }).setExpirationTime("30d").sign(secret)
+  const token = await new SignJWT(payload as any).setProtectedHeader({ alg: ALGORITHM }).setExpirationTime("30d").sign(secret)
   return token
 }
 
@@ -21,7 +22,7 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
     const secret = new TextEncoder().encode(JWT_SECRET)
     const verified = await jwtVerify(token, secret)
-    return verified.payload as JWTPayload
+    return verified.payload as unknown as JWTPayload
   } catch {
     return null
   }

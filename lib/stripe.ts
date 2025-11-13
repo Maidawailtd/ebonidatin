@@ -36,6 +36,8 @@ export async function createCheckoutSession(userId: string, tier: string, succes
     throw new Error("Invalid subscription tier")
   }
 
+  const stripePriceId = 'stripePriceId' in tierConfig ? tierConfig.stripePriceId : ''
+
   const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
     headers: {
@@ -44,7 +46,7 @@ export async function createCheckoutSession(userId: string, tier: string, succes
     },
     body: new URLSearchParams({
       "payment_method_types[]": "card",
-      "line_items[0][price]": tierConfig.stripePriceId || "",
+      "line_items[0][price]": stripePriceId,
       "line_items[0][quantity]": "1",
       mode: "subscription",
       success_url: successUrl,

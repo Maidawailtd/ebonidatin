@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid subscription tier" }, { status: 400 })
     }
 
-    const origin = request.headers.get("origin") || "http://localhost:3000"
+    const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
     const session = await createCheckoutSession(
       user.userId,
       tier,
@@ -26,7 +26,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ sessionId: session.id, url: session.url })
   } catch (error) {
-    console.error("Create checkout session error:", error)
+    if (process.env.NODE_ENV !== 'production') {
+      console.error("Create checkout session error:", error)
+    }
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
