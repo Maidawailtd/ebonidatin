@@ -3,15 +3,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Heart, MessageCircle, Search, Settings, User, Sparkles, MapPin, Camera } from "lucide-react"
+import { Heart, MessageCircle, Search, Settings, User, Sparkles, MapPin, Camera, TrendingUp, Users, Award } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<"discover" | "matches" | "messages">("discover")
-
-  // Featured profiles for discovery
   const featuredProfiles = [
     {
       id: 1,
@@ -78,7 +75,7 @@ export default function HomePage() {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar Navigation - Desktop */}
-      <nav className="sidebar-nav bg-card fixed left-0 top-0 h-screen w-64 border-r border-border p-6 flex flex-col hidden md:flex">
+      <nav className="sidebar-nav bg-card fixed left-0 top-0 h-screen w-64 border-r border-border p-6 flex flex-col hidden md:flex z-50">
         <div className="mb-10">
           <h1 className="text-3xl font-black bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
             eboni
@@ -95,7 +92,7 @@ export default function HomePage() {
             <span>Discover</span>
           </Link>
           <Link
-            href="/matches"
+            href="/discover"
             className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors"
           >
             <Heart size={22} />
@@ -131,98 +128,123 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Main Content - Offset for sidebar on desktop */}
+      {/* Main Content */}
       <main className="flex-1 md:ml-64">
-        <div className="max-w-7xl mx-auto p-4 md:p-8 pb-24 md:pb-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-2">Discover</h2>
-              <p className="text-muted-foreground">Find your perfect connection</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="icon" className="rounded-full">
-                <Search size={20} />
-              </Button>
-              <Button variant="outline" size="icon" className="rounded-full">
-                <Settings size={20} />
-              </Button>
+        {/* Hero Section */}
+        <div className="relative bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-blue-500/10 border-b border-border">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Find Your Perfect Match
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground mb-8">
+                Connect with verified members looking for genuine connections. Join thousands finding love every day.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/auth/signup">
+                  <Button size="lg" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-8 py-6 text-lg hover:opacity-90 transition-opacity">
+                    Create Free Account
+                  </Button>
+                </Link>
+                <Link href="/discover">
+                  <Button size="lg" variant="outline" className="rounded-full font-bold px-8 py-6 text-lg">
+                    Browse Profiles
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
+        </div>
 
+        <div className="max-w-7xl mx-auto p-4 md:p-8 pb-24 md:pb-8">
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-pink-500">2.4k+</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-2">
+                  <Users className="text-pink-500" size={32} />
+                </div>
+                <div className="text-3xl font-bold text-pink-500 mb-1">2.4k+</div>
                 <div className="text-sm text-muted-foreground">Active Users</div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-500">856</div>
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-2">
+                  <Sparkles className="text-purple-500" size={32} />
+                </div>
+                <div className="text-3xl font-bold text-purple-500 mb-1">856</div>
                 <div className="text-sm text-muted-foreground">Online Now</div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-500">1.2k</div>
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-2">
+                  <TrendingUp className="text-blue-500" size={32} />
+                </div>
+                <div className="text-3xl font-bold text-blue-500 mb-1">1.2k</div>
                 <div className="text-sm text-muted-foreground">New Today</div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-500">94%</div>
+            <Card className="border-2 hover:shadow-lg transition-shadow">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-2">
+                  <Award className="text-green-500" size={32} />
+                </div>
+                <div className="text-3xl font-bold text-green-500 mb-1">94%</div>
                 <div className="text-sm text-muted-foreground">Match Rate</div>
               </CardContent>
             </Card>
           </div>
 
           {/* Featured Profiles Grid */}
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">Featured Profiles</h3>
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-3xl font-bold">Featured Profiles</h2>
+              <Link href="/discover">
+                <Button variant="outline" className="rounded-full">
+                  View All
+                </Button>
+              </Link>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProfiles.map((profile) => (
-                <Card key={profile.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <Card key={profile.id} className="overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2">
                   <div className="relative aspect-[3/4] overflow-hidden bg-muted">
                     <img
                       src={profile.image || "/placeholder.svg"}
                       alt={profile.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                     {profile.online && (
-                      <div className="absolute top-3 right-3 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                      <div className="absolute top-4 right-4 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
                     )}
                     {profile.verified && (
-                      <div className="absolute top-3 left-3 bg-primary/90 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                        <Sparkles size={12} />
+                      <div className="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                        <Sparkles size={14} />
                         Verified
                       </div>
                     )}
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-white">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-bold text-lg mb-1">
-                            {profile.name}, {profile.age}
-                          </h4>
-                          <p className="text-sm opacity-90 flex items-center gap-1 mb-1">
-                            <MapPin size={14} />
-                            {profile.location}
-                          </p>
-                          <p className="text-xs opacity-80">{profile.bio}</p>
-                        </div>
-                      </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-5 text-white">
+                      <h3 className="font-bold text-xl mb-2">
+                        {profile.name}, {profile.age}
+                      </h3>
+                      <p className="text-sm opacity-90 flex items-center gap-1.5 mb-2">
+                        <MapPin size={16} />
+                        {profile.location}
+                      </p>
+                      <p className="text-sm opacity-80">{profile.bio}</p>
                     </div>
                   </div>
                   <CardContent className="p-4">
-                    <div className="flex gap-2">
-                      <Button className="flex-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90">
+                    <div className="flex gap-3">
+                      <Button className="flex-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 font-bold">
                         <Heart size={18} className="mr-2" />
                         Like
                       </Button>
-                      <Button variant="outline" className="flex-1 rounded-full">
+                      <Button variant="outline" className="flex-1 rounded-full font-bold border-2">
                         <MessageCircle size={18} className="mr-2" />
-                        Message
+                        Chat
                       </Button>
                     </div>
                   </CardContent>
@@ -231,17 +253,57 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Features Section */}
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-center mb-8">Why Choose Eboni?</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="text-center p-8 border-2 hover:shadow-lg transition-shadow">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-pink-500/10 rounded-full flex items-center justify-center">
+                    <Sparkles className="text-pink-500" size={32} />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-3">Verified Profiles</h3>
+                <p className="text-muted-foreground">
+                  All members are verified to ensure authenticity and safety in our community.
+                </p>
+              </Card>
+              <Card className="text-center p-8 border-2 hover:shadow-lg transition-shadow">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center">
+                    <Heart className="text-purple-500" size={32} />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-3">Smart Matching</h3>
+                <p className="text-muted-foreground">
+                  Our algorithm finds compatible matches based on your preferences and interests.
+                </p>
+              </Card>
+              <Card className="text-center p-8 border-2 hover:shadow-lg transition-shadow">
+                <div className="flex justify-center mb-4">
+                  <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center">
+                    <MessageCircle className="text-blue-500" size={32} />
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-3">Instant Messaging</h3>
+                <p className="text-muted-foreground">
+                  Connect and chat instantly with your matches in real-time conversations.
+                </p>
+              </Card>
+            </div>
+          </div>
+
           {/* CTA Section */}
-          <Card className="bg-gradient-to-r from-pink-500/10 to-purple-600/10 border-2 border-pink-500/20">
-            <CardContent className="p-8 text-center">
-              <Camera size={48} className="mx-auto mb-4 text-pink-500" />
-              <h3 className="text-2xl font-bold mb-2">Ready to Find Your Match?</h3>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Join thousands of verified members looking for genuine connections. Start your journey today.
+          <Card className="bg-gradient-to-r from-pink-500/10 to-purple-600/10 border-2 border-pink-500/20 hover:shadow-xl transition-shadow">
+            <CardContent className="p-12 text-center">
+              <Camera size={64} className="mx-auto mb-6 text-pink-500" />
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Find Your Match?</h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Join thousands of verified members looking for genuine connections. Create your profile and start your journey today.
               </p>
               <Link href="/auth/signup">
-                <Button size="lg" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-8">
-                  Create Your Profile
+                <Button size="lg" className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold px-12 py-7 text-lg hover:opacity-90 transition-opacity shadow-lg">
+                  Create Your Profile Now
                 </Button>
               </Link>
             </CardContent>
@@ -250,12 +312,12 @@ export default function HomePage() {
       </main>
 
       {/* Bottom Navigation - Mobile Only */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 flex items-center justify-around md:hidden z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 flex items-center justify-around md:hidden z-50 shadow-lg">
         <Link href="/" className="flex flex-col items-center gap-1 text-primary">
           <Sparkles size={24} />
           <span className="text-xs font-medium">Discover</span>
         </Link>
-        <Link href="/matches" className="flex flex-col items-center gap-1 hover:opacity-60">
+        <Link href="/discover" className="flex flex-col items-center gap-1 hover:opacity-60">
           <Heart size={24} />
           <span className="text-xs">Matches</span>
         </Link>
