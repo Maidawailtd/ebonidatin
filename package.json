@@ -75,6 +75,11 @@
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "^5",
-    "wrangler": "^3.57.0"
+    "wrangler": "^3.114.15"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": ">=0.25.0"
+    }
   }
 }
