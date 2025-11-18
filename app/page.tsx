@@ -3,12 +3,14 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Heart, MessageCircle, Search, Settings, User, Sparkles, MapPin, Camera, TrendingUp, Users, Award } from "lucide-react"
+import { Heart, MessageCircle, Search, Settings, User, Sparkles, MapPin, Camera, TrendingUp, Users, Award, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 
 export default function HomePage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  
   const featuredProfiles = [
     {
       id: 1,
@@ -74,6 +76,92 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen bg-background">
+      {/* Mobile Header with Menu Button */}
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-card border-b border-border p-4 flex items-center justify-between z-50">
+        <Link href="/" className="flex items-center gap-2">
+          <h1 className="text-2xl font-black bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+            eboni
+          </h1>
+        </Link>
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-2 rounded-lg hover:bg-muted transition-colors"
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileMenuOpen}
+        >
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Slide-out Menu */}
+      <div
+        className={`md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+          mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+      <nav
+        aria-label="Mobile navigation"
+        className={`md:hidden fixed top-0 left-0 h-full w-64 bg-card border-r border-border p-6 flex flex-col z-50 transition-transform duration-300 ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="mb-10">
+          <h1 className="text-3xl font-black bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+            eboni
+          </h1>
+          <p className="text-xs text-muted-foreground mt-1">Find your perfect match</p>
+        </div>
+
+        <div className="space-y-2 flex-1">
+          <Link
+            href="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary font-medium transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <Sparkles size={22} />
+            <span>Discover</span>
+          </Link>
+          <Link
+            href="/discover"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <Heart size={22} />
+            <span>Matches</span>
+          </Link>
+          <Link
+            href="/messages"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <MessageCircle size={22} />
+            <span>Messages</span>
+          </Link>
+          <Link
+            href="/profile"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted transition-colors"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <User size={22} />
+            <span>Profile</span>
+          </Link>
+        </div>
+
+        <div className="space-y-3">
+          <Link href="/auth/signup" onClick={() => setMobileMenuOpen(false)}>
+            <Button className="w-full rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold py-6 text-base hover:opacity-90 transition-opacity">
+              Get Started
+            </Button>
+          </Link>
+          <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
+            <Button variant="outline" className="w-full rounded-full font-medium py-6 text-base">
+              Sign In
+            </Button>
+          </Link>
+        </div>
+      </nav>
+
       {/* Sidebar Navigation - Desktop */}
       <nav aria-label="Main navigation" className="sidebar-nav bg-card fixed left-0 top-0 h-screen w-64 border-r border-border p-6 flex flex-col hidden md:flex z-50">
         <div className="mb-10">
@@ -129,7 +217,7 @@ export default function HomePage() {
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 md:ml-64">
+      <main className="flex-1 md:ml-64 pt-16 md:pt-0">
         {/* Hero Section */}
         <div className="relative bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-blue-500/10 border-b border-border">
           <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
