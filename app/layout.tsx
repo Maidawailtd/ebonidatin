@@ -8,21 +8,28 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Eboni Dating - Connect with Real People",
+  title: "Eboni Dating - Find Your Perfect Match",
   description:
-    "Find genuine connections, explore amazing profiles, and start dating today. Eboni Dating is the web platform for real connections.",
+    "Find genuine connections, explore verified profiles, and start dating today. Join thousands finding love on Eboni Dating - the premium platform for real relationships.",
   generator: "v0.app",
-  keywords: ["dating", "relationships", "matches", "dating website", "online dating", "connections"],
+  keywords: ["dating", "relationships", "matches", "dating website", "online dating", "connections", "verified profiles", "singles", "eboni dating"],
   authors: [{ name: "Eboni Dating" }],
   openGraph: {
-    title: "Eboni Dating - Connect with Real People",
-    description: "Find genuine connections and start dating today on our web platform",
+    title: "Eboni Dating - Find Your Perfect Match",
+    description: "Join thousands finding love on the premium platform for real relationships",
     type: "website",
+    url: "https://ebonidating.com",
+    siteName: "Eboni Dating",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eboni Dating - Connect with Real People",
-    description: "Find genuine connections and start dating today on our web platform",
+    title: "Eboni Dating - Find Your Perfect Match",
+    description: "Join thousands finding love on the premium platform for real relationships",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
   icons: {
     icon: [
@@ -43,15 +50,31 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Dynamically import to avoid breaking if Supabase not configured
+  let user = null
+  try {
+    const { createClient } = await import('@/utils/supabase/server')
+    const supabase = await createClient()
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    user = authUser
+  } catch (error) {
+    // Continue without user if Supabase not configured
+  }
+
+  const { Header } = await import('@/components/layout/Header')
+  const { Footer } = await import('@/components/layout/Footer')
+
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
-        {children}
+      <body className={`font-sans antialiased flex flex-col min-h-screen`}>
+        <Header user={user} />
+        <main className="flex-1">{children}</main>
+        <Footer />
         <Analytics />
       </body>
     </html>

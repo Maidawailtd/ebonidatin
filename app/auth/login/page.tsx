@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { GoogleSignIn } from "@/components/GoogleSignIn"
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" })
