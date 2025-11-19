@@ -58,6 +58,9 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@supabase/supabase-js', 'lucide-react'],
   },
+
+  // Vercel-specific optimizations
+  output: process.env.VERCEL ? 'standalone' : undefined,
 }
 
 export default nextConfig

@@ -37,7 +37,7 @@ async function setupEnvironment() {
   
   // Site Configuration
   console.log('\n🌐 Site Configuration:')
-  envVars.NEXT_PUBLIC_SITE_URL = await askQuestion('Enter your site URL (e.g., https://your-app.replit.app): ') || 'http://localhost:5000'
+  envVars.NEXT_PUBLIC_SITE_URL = await askQuestion('Enter your site URL (e.g., https://your-app.vercel.app or https://your-app.replit.app): ') || 'http://localhost:5000'
   
   // Email Configuration
   console.log('\n📧 Email Configuration (SendGrid):')

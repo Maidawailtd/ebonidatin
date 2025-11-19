@@ -1,4 +1,3 @@
-
 # Production Setup Guide for Eboni Dating
 
 ## Prerequisites
@@ -45,9 +44,20 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 ## Deployment
 
-1. Use the "Production Build" workflow to build and start the application
-2. Configure your custom domain in Replit Deployments if needed
-3. Set up environment variables in the Secrets tab
+### 1. Vercel Deployment (Recommended)
+The recommended way to deploy is using Vercel:
+
+1. Connect your repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### 2. Replit Deployment
+Alternative deployment using Replit's built-in deployment:
+
+1. Click the "Deploy" button in the header
+2. Select "Reserved VM" or "Autoscale" deployment
+3. Configure your domain and environment variables
+4. Click "Deploy"
 
 ## Supabase Configuration
 

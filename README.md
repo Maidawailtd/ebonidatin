@@ -84,6 +84,25 @@ Optional:
 - Subscription management with Stripe
 - User verification and reporting system
 
+## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
+1. Connect your repository to Vercel
+2. Configure environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Replit Deployment
+1. Click the "Deploy" button
+2. Configure environment variables
+3. Select deployment type
+4. Deploy to production
+
+### Manual Deployment
+```bash
+pnpm build
+pnpm start
+```
+
 ## 📖 Documentation
 
 - [Next.js Docs](https://nextjs.org/docs)
