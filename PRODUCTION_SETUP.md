@@ -47,9 +47,13 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 ### 1. Vercel Deployment (Recommended)
 The recommended way to deploy is using Vercel:
 
-1. Connect your repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
+1. **Connect Repository**: Link your GitHub repository to Vercel
+2. **Configure Environment Variables**: 
+   - Go to Vercel Dashboard → Project → Settings → Environment Variables
+   - Add all variables from `.env.example`
+   - Set `NEXT_PUBLIC_SITE_URL` to your Vercel domain
+3. **Deploy**: Vercel will automatically deploy on push to main branch
+4. **Domain Setup**: Configure your custom domain in Vercel settings
 
 ### 2. Replit Deployment
 Alternative deployment using Replit's built-in deployment:

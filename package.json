@@ -85,6 +85,7 @@
     }
   },
   "trustedDependencies": [
-    "pg-native"
+    "pg-native",
+    "sharp"
   ]
 }
