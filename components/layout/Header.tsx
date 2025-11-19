@@ -23,19 +23,18 @@ export function Header({ user }: HeaderProps) {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-card/95 backdrop-blur-md border-b border-border z-50">
+    <header className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-md border-b border-border z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
-              <Heart className="text-white" size={20} fill="white" />
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center transform group-hover:rotate-3 transition-transform">
+              <Heart className="text-primary-foreground" size={20} fill="currentColor" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl font-black bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-black tracking-tight text-foreground">
                 eboni
               </h1>
-              <span className="text-[10px] text-muted-foreground -mt-1">dating</span>
             </div>
           </Link>
 
@@ -68,12 +67,12 @@ export function Header({ user }: HeaderProps) {
                 <Link href="/discover" className="text-sm font-medium hover:text-primary transition-colors">
                   Browse
                 </Link>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 ml-4">
                   <Link href="/auth/login">
-                    <Button variant="ghost" size="sm">Sign In</Button>
+                    <Button variant="ghost" className="font-medium">Sign In</Button>
                   </Link>
                   <Link href="/auth/signup">
-                    <Button size="sm" className="bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                    <Button className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold px-6">
                       Get Started
                     </Button>
                   </Link>
@@ -96,40 +95,40 @@ export function Header({ user }: HeaderProps) {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-border">
-          <nav className="px-4 py-4 space-y-3" aria-label="Mobile navigation">
+        <div className="md:hidden border-t border-border bg-background">
+          <nav className="px-4 py-6 space-y-4" aria-label="Mobile navigation">
             {user ? (
               <>
                 <Link
                   href="/discover"
-                  className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Discover
                 </Link>
                 <Link
                   href="/matches"
-                  className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Matches
                 </Link>
                 <Link
                   href="/messages"
-                  className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Messages
                 </Link>
                 <Link
                   href="/profile"
-                  className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Profile
                 </Link>
-                <Button onClick={handleSignOut} variant="ghost" size="sm" className="w-full justify-start">
-                  <LogOut size={16} className="mr-2" />
+                <Button onClick={handleSignOut} variant="ghost" size="lg" className="w-full justify-start px-0">
+                  <LogOut size={20} className="mr-2" />
                   Sign Out
                 </Button>
               </>
@@ -137,24 +136,24 @@ export function Header({ user }: HeaderProps) {
               <>
                 <Link
                   href="/about"
-                  className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   About
                 </Link>
                 <Link
                   href="/discover"
-                  className="block py-2 text-sm font-medium hover:text-primary transition-colors"
+                  className="block py-2 text-lg font-medium hover:text-primary transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Browse
                 </Link>
-                <div className="pt-3 space-y-2">
+                <div className="pt-6 space-y-3">
                   <Link href="/auth/login" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="ghost" size="sm" className="w-full">Sign In</Button>
+                    <Button variant="outline" size="lg" className="w-full rounded-full">Sign In</Button>
                   </Link>
                   <Link href="/auth/signup" onClick={() => setMobileMenuOpen(false)}>
-                    <Button size="sm" className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white">
+                    <Button size="lg" className="w-full rounded-full bg-primary text-primary-foreground">
                       Get Started
                     </Button>
                   </Link>

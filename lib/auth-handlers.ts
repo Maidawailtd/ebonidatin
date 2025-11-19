@@ -1,4 +1,3 @@
-
 import { type NextRequest, NextResponse } from "next/server";
 import { getOne, queryDb, runDb } from "@/lib/db";
 import { 
@@ -74,7 +73,7 @@ export async function handleLogin(request: NextRequest) {
 export async function handleSignup(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, username, password, accountType = "dater" } = body
+    const { email, username, password, accountType = "dater", country, countryCode, city } = body
 
     if (!email || !username || !password) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -84,7 +83,10 @@ export async function handleSignup(request: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 })
     }
 
-    // Check if user exists
+    if (!country || !city) {
+      return NextResponse.json({ error: "Country and city are required" }, { status: 400 })
+    }
+
     const existingUser = await queryDb("SELECT id FROM users WHERE email = ? OR username = ?", [email, username])
 
     if (existingUser.length > 0) {
@@ -96,7 +98,6 @@ export async function handleSignup(request: NextRequest) {
     const verificationToken = generateVerificationToken()
     const tokenExpiresAt = getTokenExpirationTime(1)
 
-    // Create user
     await runDb(
       `INSERT INTO users (id, email, username, password_hash, account_type, 
         email_verification_token, email_verification_token_expires_at) 
@@ -104,10 +105,11 @@ export async function handleSignup(request: NextRequest) {
       [userId, email, username, passwordHash, accountType, verificationToken, tokenExpiresAt.toISOString()],
     )
 
-    // Create profile
-    await runDb("INSERT INTO user_profiles (id, user_id) VALUES (?, ?)", [generateId(), userId])
+    await runDb(
+      "INSERT INTO user_profiles (id, user_id, country, country_code, city) VALUES (?, ?, ?, ?, ?)",
+      [generateId(), userId, country, countryCode, city],
+    )
 
-    // Send verification email
     const verificationLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/verify?token=${verificationToken}&email=${encodeURIComponent(email)}`
     await sendEmail({
       to: email,
@@ -115,7 +117,6 @@ export async function handleSignup(request: NextRequest) {
       html: getVerificationEmailHTML(verificationLink, username),
     })
 
-    // Generate JWT token
     const token = await generateToken({
       userId,
       email,
@@ -157,7 +158,6 @@ export async function handleVerifyEmail(request: NextRequest) {
       return NextResponse.json({ error: "Verification token has expired" }, { status: 400 })
     }
 
-    // Update user
     await runDb(
       `UPDATE users SET email_verified = TRUE, 
         email_verification_token = NULL, 
@@ -167,7 +167,6 @@ export async function handleVerifyEmail(request: NextRequest) {
       [user.id],
     )
 
-    // Send welcome email
     await sendEmail({
       to: email,
       subject: "Welcome to Eboni Dating!",

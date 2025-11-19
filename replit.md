@@ -78,7 +78,7 @@ The application uses Supabase PostgreSQL with the following main tables:
 ## Environment Variables
 
 ### Required for Production
-```
+\`\`\`
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 DATABASE_URL=postgres://...
@@ -88,13 +88,13 @@ STRIPE_PUBLISHABLE_KEY=pk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 SENDGRID_API_KEY=SG...
 NEXT_PUBLIC_JWT_SECRET=your-strong-secret
-```
+\`\`\`
 
 ### Development
 See `.env.local` for development configuration. Never commit this file to git.
 
 ## File Structure
-```
+\`\`\`
 ├── app/
 │   ├── api/              # API routes
 │   │   ├── auth/        # Authentication endpoints
@@ -127,15 +127,15 @@ See `.env.local` for development configuration. Never commit this file to git.
 │   ├── init-db.sql      # Initial database schema
 │   └── add-bookings-table.sql  # Additional tables
 └── .env.local           # Local environment variables (DO NOT COMMIT)
-```
+\`\`\`
 
 ## Development Workflow
 
 ### Running Locally
-```bash
+\`\`\`bash
 pnpm install
 pnpm dev
-```
+\`\`\`
 Access at http://localhost:5000
 
 ### Database Changes

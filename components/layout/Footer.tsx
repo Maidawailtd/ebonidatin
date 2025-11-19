@@ -5,69 +5,59 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-card border-t border-border mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-secondary/30 border-t border-border mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
-                <Heart className="text-white" size={20} fill="white" />
+              <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                <Heart className="text-primary-foreground" size={20} fill="currentColor" />
               </div>
               <div className="flex flex-col">
-                <h2 className="text-xl font-black bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+                <h2 className="text-2xl font-black tracking-tight text-foreground">
                   eboni
                 </h2>
-                <span className="text-[10px] text-muted-foreground -mt-1">dating</span>
               </div>
             </Link>
-            <p className="text-sm text-muted-foreground">
-              Find your perfect match. Connect with verified members looking for genuine connections.
+            <p className="text-muted-foreground leading-relaxed">
+              Find your perfect match. Connect with verified members looking for genuine connections in a safe, premium environment.
             </p>
             <div className="flex gap-4">
               <a
                 href="https://facebook.com/ebonidating"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all"
                 aria-label="Facebook"
               >
-                <Facebook size={20} />
+                <Facebook size={18} />
               </a>
               <a
                 href="https://twitter.com/ebonidating"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all"
                 aria-label="Twitter"
               >
-                <Twitter size={20} />
+                <Twitter size={18} />
               </a>
               <a
                 href="https://instagram.com/ebonidating"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all"
                 aria-label="Instagram"
               >
-                <Instagram size={20} />
-              </a>
-              <a
-                href="https://linkedin.com/company/ebonidating"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
+                <Instagram size={18} />
               </a>
             </div>
           </div>
 
           {/* Company */}
           <div>
-            <h3 className="font-semibold mb-4">Company</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="font-bold text-lg mb-6">Company</h3>
+            <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
                   About Us
@@ -93,8 +83,8 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="font-bold text-lg mb-6">Support</h3>
+            <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/help" className="text-muted-foreground hover:text-primary transition-colors">
                   Help Center
@@ -106,9 +96,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                <a href="mailto:info@ebonidating.com" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Us
-                </Link>
+                </a>
               </li>
               <li>
                 <Link href="/faq" className="text-muted-foreground hover:text-primary transition-colors">
@@ -120,8 +110,8 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="font-bold text-lg mb-6">Legal</h3>
+            <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/legal/privacy" className="text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
@@ -147,21 +137,18 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-border">
+        <div className="mt-16 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
               © {currentYear} Eboni Dating. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm text-muted-foreground">
+            <div className="flex gap-8 text-sm text-muted-foreground">
               <Link href="/sitemap" className="hover:text-primary transition-colors">
                 Sitemap
               </Link>
               <Link href="/accessibility" className="hover:text-primary transition-colors">
                 Accessibility
               </Link>
-              <button className="hover:text-primary transition-colors">
-                Cookie Preferences
-              </button>
             </div>
           </div>
         </div>

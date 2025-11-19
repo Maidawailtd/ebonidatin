@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
             <h3 className="text-xl font-semibold mb-3 mt-6">2.1 Information You Provide</h3>
             <ul className="list-disc pl-6 space-y-2">
               <li><strong>Account Information:</strong> Email address, username, password, date of birth</li>
-              <li><strong>Profile Information:</strong> Name, gender, sexual orientation, location, photos, bio, interests, preferences</li>
+              <li><strong>Profile Information:</strong> Name, gender, sexual orientation, location (country, city), photos, bio, interests, preferences</li>
               <li><strong>Communication Data:</strong> Messages sent through our platform, support inquiries</li>
               <li><strong>Payment Information:</strong> Billing details for subscriptions (processed securely by Stripe)</li>
               <li><strong>Verification Data:</strong> Government-issued ID or selfie photos for identity verification</li>
@@ -51,7 +51,7 @@ export default function PrivacyPolicyPage() {
 
             <h3 className="text-xl font-semibold mb-3 mt-6">2.3 Third-Party Information</h3>
             <p>
-              If you sign in using Google or other third-party services, we receive basic profile information (name, email, profile picture) as permitted by that service.
+              If you sign in using <strong>Google OAuth</strong>, we receive basic profile information (name, email, profile picture) as permitted by that service. We comply with Google's OAuth 2.0 Policies and only request the minimum necessary scopes. Your Google credentials are never stored on our servers.
             </p>
           </section>
 
@@ -79,11 +79,15 @@ export default function PrivacyPolicyPage() {
             <h3 className="text-xl font-semibold mb-3 mt-6">4.2 Service Providers</h3>
             <p>We share data with trusted third parties who assist us:</p>
             <ul className="list-disc pl-6 space-y-2 mt-2">
-              <li><strong>Supabase:</strong> Database hosting and authentication</li>
+              <li><strong>Supabase:</strong> Database hosting and authentication (including Google OAuth)</li>
               <li><strong>Stripe:</strong> Payment processing</li>
               <li><strong>SendGrid:</strong> Transactional emails</li>
               <li><strong>Vercel Analytics:</strong> Usage analytics (anonymized)</li>
+              <li><strong>Google:</strong> OAuth authentication services (subject to Google's Privacy Policy)</li>
             </ul>
+            <p className="mt-4 text-sm text-muted-foreground">
+              All service providers are contractually obligated to protect your data and use it only for the purposes we specify.
+            </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">4.3 Legal Requirements</h3>
             <p>We may disclose information if required by law, court order, or government request, or to protect our rights and safety.</p>

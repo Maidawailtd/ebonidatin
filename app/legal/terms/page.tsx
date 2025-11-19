@@ -48,6 +48,9 @@ export default function TermsOfServicePage() {
             <p>
               You must provide accurate, current, and complete information during registration. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account.
             </p>
+            <p className="mt-2">
+              If you register using a third-party service (such as Google), you authorize us to access and use your information from that service as permitted by that service, and to store your log-in credentials for that service.
+            </p>
 
             <h3 className="text-xl font-semibold mb-3 mt-6">3.2 Account Security</h3>
             <ul className="list-disc pl-6 space-y-2">
