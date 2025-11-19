@@ -20,6 +20,13 @@ Run the setup script:
 node scripts/setup-env.js
 ```
 
+### Build Environment Variables
+For deployment platforms, ensure these environment variables are set:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_SITE_URL`
+
 ### Method 2: Manual Setup
 Copy `.env.local.example` to `.env.local` and fill in your values:
 

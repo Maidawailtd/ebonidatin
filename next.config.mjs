@@ -10,10 +10,19 @@ const nextConfig = {
   images: {
     domains: [
       'supabase.co',
-      'your-supabase-project.supabase.co',
       'ebonidating.com',
       'images.unsplash.com',
       'lh3.googleusercontent.com' // For Google OAuth profile pictures
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.com',
+      }
     ],
     formats: ['image/webp', 'image/avif'],
     minimumCacheTTL: 60,

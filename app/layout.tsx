@@ -60,8 +60,10 @@ export default async function RootLayout({
   try {
     const { createClient } = await import('@/utils/supabase/server')
     const supabase = await createClient()
-    const { data: { user: authUser } } = await supabase.auth.getUser()
-    user = authUser
+    if (supabase) {
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+      user = authUser
+    }
   } catch (error) {
     // Continue without user if Supabase not configured
   }
