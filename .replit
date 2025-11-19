@@ -29,6 +29,26 @@ waitForPort = 5000
 [workflows.workflow.metadata]
 outputType = "webview"
 
+[[workflows.workflow]]
+name = "Production Build"
+author = 38830106
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm run build"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pnpm run start"
+
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[deployment]
+run = ["sh", "-c", "pnpm start"]
