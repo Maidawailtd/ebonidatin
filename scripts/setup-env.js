@@ -37,12 +37,12 @@ async function setupEnvironment() {
   
   // Site Configuration
   console.log('\n🌐 Site Configuration:')
-  envVars.NEXT_PUBLIC_SITE_URL = await askQuestion('Enter your site URL (e.g., https://ebonidating.com): ') || 'http://localhost:5000'
+  envVars.NEXT_PUBLIC_SITE_URL = await askQuestion('Enter your site URL (e.g., https://your-app.replit.app): ') || 'http://localhost:5000'
   
   // Email Configuration
   console.log('\n📧 Email Configuration (SendGrid):')
   envVars.SENDGRID_API_KEY = await askQuestion('Enter SendGrid API Key (optional): ') || ''
-  envVars.SENDGRID_FROM_EMAIL = await askQuestion('Enter from email (optional): ') || 'noreply@ebonidating.com'
+  envVars.SENDGRID_FROM_EMAIL = await askQuestion('Enter from email (optional): ') || 'noreply@your-domain.com'
   
   // Stripe Configuration
   console.log('\n💳 Stripe Configuration:')
@@ -68,8 +68,8 @@ async function setupEnvironment() {
   
   envContent += '\n# Site Configuration\n'
   envContent += `NEXT_PUBLIC_SITE_URL=${envVars.NEXT_PUBLIC_SITE_URL}\n`
-  envContent += `NEXT_PUBLIC_APP_NAME=Eboni Dating\n`
-  envContent += `NEXT_PUBLIC_APP_DESCRIPTION=Premium dating platform for the Black diaspora\n`
+  envContent += `NEXT_PUBLIC_APP_NAME=Dating Platform\n`
+  envContent += `NEXT_PUBLIC_APP_DESCRIPTION=Modern dating and modeling platform\n`
   
   if (envVars.SENDGRID_API_KEY) {
     envContent += '\n# Email Configuration\n'
@@ -102,7 +102,7 @@ async function setupEnvironment() {
   console.log('📁 File location: .env.local')
   console.log('\n🔒 Remember to:')
   console.log('1. Never commit .env.local to git')
-  console.log('2. Set up these same variables in your production environment')
+  console.log('2. Add these variables to Replit Secrets for deployment')
   console.log('3. Update your Supabase project settings')
   console.log('4. Configure your domain in Supabase Auth settings')
   

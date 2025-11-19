@@ -8,27 +8,16 @@
    - Note down your Project URL and API keys
    - Run the database migration scripts in `/scripts/`
 
-2. **Domain Configuration**
-   - Set up your domain (ebonidating.com)
-   - Configure DNS to point to your hosting platform
-
 ## Environment Variables Setup
 
-### Method 1: Automated Setup
+### Automated Setup
 Run the setup script:
 ```bash
 node scripts/setup-env.js
 ```
 
-### Build Environment Variables
-For deployment platforms, ensure these environment variables are set:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `NEXT_PUBLIC_SITE_URL`
-
-### Method 2: Manual Setup
-Copy `.env.local.example` to `.env.local` and fill in your values:
+### Manual Setup
+Create `.env.local` with these variables:
 
 #### Required Variables
 ```env
@@ -36,27 +25,29 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 NEXT_PUBLIC_JWT_SECRET=your-32-character-secret
-NEXT_PUBLIC_SITE_URL=https://ebonidating.com
+NEXT_PUBLIC_SITE_URL=https://your-app.replit.app
 ```
 
-#### Optional but Recommended
+#### Optional Variables
 ```env
 # Email
 SENDGRID_API_KEY=your-sendgrid-key
-SENDGRID_FROM_EMAIL=noreply@ebonidating.com
+SENDGRID_FROM_EMAIL=noreply@your-domain.com
 
 # Payments
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
 STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
 
 # OAuth
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-# Monitoring
-SENTRY_DSN=your-sentry-dsn
 ```
+
+## Deployment
+
+1. Use the "Production Build" workflow to build and start the application
+2. Configure your custom domain in Replit Deployments if needed
+3. Set up environment variables in the Secrets tab
 
 ## Supabase Configuration
 
