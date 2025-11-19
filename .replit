@@ -52,3 +52,4 @@ externalPort = 80
 
 [deployment]
 run = ["sh", "-c", "pnpm start"]
+build = ["sh", "-c", "pnpm install && pnpm run build"]
