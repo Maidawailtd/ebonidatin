@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose"
 import { compare, hash } from "bcryptjs"
 
-const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET || "your-secret-key"
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SUPABASE_JWT_SECRET || "your-secret-key"
 const ALGORITHM = "HS256"
 
 export interface JWTPayload {
@@ -14,7 +14,10 @@ export interface JWTPayload {
 
 export async function generateToken(payload: JWTPayload): Promise<string> {
   const secret = new TextEncoder().encode(JWT_SECRET)
-  const token = await new SignJWT(payload as any).setProtectedHeader({ alg: ALGORITHM }).setExpirationTime("30d").sign(secret)
+  const token = await new SignJWT(payload as any)
+    .setProtectedHeader({ alg: ALGORITHM })
+    .setExpirationTime("30d")
+    .sign(secret)
   return token
 }
 

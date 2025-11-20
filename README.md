@@ -15,36 +15,36 @@ A full-featured dating and modeling platform built with Next.js 15, Supabase, an
 
 ### Setup Environment
 Run the automated setup:
-```bash
+\`\`\`bash
 node scripts/setup-env.js
-```
+\`\`\`
 
 ### Install Dependencies
-```bash
+\`\`\`bash
 pnpm install
-```
+\`\`\`
 
 ### Run Development Server
-```bash
+\`\`\`bash
 pnpm dev
-```
+\`\`\`
 
 ### Build for Production
-```bash
+\`\`\`bash
 pnpm build
 pnpm start
-```
+\`\`\`
 
 ## 🧪 Testing
 
 Type checking:
-```bash
+\`\`\`bash
 npx tsc --noEmit
-```
+\`\`\`
 
 ## 📁 Project Structure
 
-```
+\`\`\`
 eboni-dating/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
@@ -57,7 +57,7 @@ eboni-dating/
 ├── lib/                   # Utilities and helpers
 ├── public/                # Static assets
 └── utils/                # Database utilities
-```
+\`\`\`
 
 ## 🔐 Environment Variables
 
@@ -66,7 +66,6 @@ Required variables:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_SITE_URL`
-- `NEXT_PUBLIC_JWT_SECRET`
 
 Optional:
 - `STRIPE_SECRET_KEY`
@@ -98,10 +97,10 @@ Optional:
 4. Deploy to production
 
 ### Manual Deployment
-```bash
+\`\`\`bash
 pnpm build
 pnpm start
-```
+\`\`\`
 
 ## 📖 Documentation
 
